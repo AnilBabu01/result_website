@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Navbar from "../components/Navbar";
 import LiveBar from "../components/LiveBar";
 
@@ -12,73 +12,90 @@ export default function LuckyWheel() {
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState<number | null>(null);
 
-  const spinWheel = () => {
-    if (spinning) return;
+  const spinSound = useRef<HTMLAudioElement | null>(null);
+  const stopSound = useRef<HTMLAudioElement | null>(null);
 
-    setSpinning(true);
-    setResult(null);
+ const spinWheel = () => {
+  if (spinning) return;
 
-    const randomIndex = Math.floor(Math.random() * numbers.length);
+  setSpinning(true);
+  setResult(null);
 
-    const stopAngle =
-      360 - (randomIndex * segmentAngle + segmentAngle / 2);
+  if (spinSound.current) {
+    spinSound.current.currentTime = 0;
+    spinSound.current.play();
+  }
 
-    const extraSpins = 360 * 5;
-    const newRotation = rotation + extraSpins + stopAngle;
+  const randomIndex = Math.floor(Math.random() * numbers.length);
 
-    setRotation(newRotation);
+  const offset = 90; // pointer at top
 
-    setTimeout(() => {
-      const normalized = newRotation % 360;
+  const targetAngle =
+    360 * 5 +
+    (360 -
+      (randomIndex * segmentAngle +
+        segmentAngle / 2 +
+        offset));
 
-      const index =
-        Math.floor((360 - normalized) / segmentAngle) %
-        numbers.length;
+  const newRotation = rotation + targetAngle;
 
-      setResult(numbers[index]);
-      setSpinning(false);
-    }, 4000);
-  };
+  setRotation(newRotation);
+
+  setTimeout(() => {
+    // ✅ CALCULATE RESULT FROM FINAL ROTATION
+    const normalizedRotation = newRotation % 360;
+
+    const correctedAngle = (360 - normalizedRotation + offset) % 360;
+
+    const index = Math.floor(correctedAngle / segmentAngle);
+
+    setResult(numbers[index]);
+    setSpinning(false);
+
+    if (spinSound.current) spinSound.current.pause();
+
+    if (stopSound.current) {
+      stopSound.current.currentTime = 0;
+      stopSound.current.play();
+    }
+  }, 4000);
+};
 
   return (
     <>
       <Navbar />
       <LiveBar />
 
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 px-3 sm:px-4 md:px-6 py-6">
-        
-        {/* TITLE */}
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-2">
+      {/* AUDIO */}
+      <audio
+        ref={spinSound}
+        src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"
+      />
+      <audio
+        ref={stopSound}
+        src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"
+      />
+
+      <div className="min-h-screen px-3 py-6 text-white flex flex-col items-center">
+        <h1 className="text-2xl font-bold text-yellow-400">
           KOLKATA FF LUCKY NUMBER
         </h1>
 
-        <p className="text-gray-600 text-sm sm:text-base text-center mb-6">
-          Spin the wheel to get your lucky number!
-        </p>
+        <div className="relative flex flex-col items-center mt-6 bg-white/5 backdrop-blur-lg border border-yellow-500/20 rounded-xl py-6 w-full max-w-md">
 
-        {/* WHEEL CONTAINER */}
-        <div className="relative flex items-center justify-center">
-          
           {/* POINTER */}
-          <div className="absolute -top-4 sm:-top-5 left-1/2 -translate-x-1/2 z-20">
+          <div className="absolute top-75 z-20">
             <div className="w-0 h-0 
-              border-l-[10px] sm:border-l-[14px] 
-              border-r-[10px] sm:border-r-[14px] 
-              border-b-[16px] sm:border-b-[20px] 
-              border-l-transparent border-r-transparent border-b-red-500 drop-shadow-md"
+              border-l-[12px] 
+              border-r-[12px] 
+              border-b-[18px] 
+              border-l-transparent border-r-transparent border-b-green-500"
             />
           </div>
 
           {/* WHEEL */}
           <div
-            className="
-              w-[260px] h-[260px]
-              sm:w-[300px] sm:h-[300px]
-              md:w-[360px] md:h-[360px]
-              lg:w-[420px] lg:h-[420px]
-              rounded-full border-[6px] border-yellow-400 
-              shadow-xl bg-white
-            "
+            className="w-[300px] h-[300px] rounded-full border-[6px] border-yellow-400 shadow-xl bg-black"
             style={{
               transform: `rotate(${rotation}deg)`,
               transition: "transform 4s cubic-bezier(0.33, 1, 0.68, 1)",
@@ -111,21 +128,18 @@ export default function LuckyWheel() {
 
                 return (
                   <g key={i}>
-                    {/* SEGMENT */}
                     <path
                       d={pathData}
-                      fill={i % 2 === 0 ? "#facc15" : "#f87171"}
-                      stroke="#fff"
+                      fill={i % 2 === 0 ? "#facc15" : "#f59e0b"}
+                      stroke="#000"
                       strokeWidth="0.5"
                     />
 
-                    {/* NUMBER */}
                     <text
                       x={textX}
                       y={textY}
                       fill="#000"
                       fontSize="6"
-                      className="sm:text-[7px] md:text-[8px]"
                       fontWeight="bold"
                       textAnchor="middle"
                       dominantBaseline="middle"
@@ -137,31 +151,23 @@ export default function LuckyWheel() {
               })}
             </svg>
           </div>
+
+          {/* BUTTON */}
+          <button
+            onClick={spinWheel}
+            disabled={spinning}
+            className="mt-6 px-6 py-3 bg-yellow-400 text-black font-bold rounded-full shadow-lg hover:scale-105 transition disabled:opacity-50"
+          >
+            {spinning ? "Spinning..." : "🍀 SPIN NOW"}
+          </button>
+
+          {/* RESULT */}
+          {result !== null && !spinning && (
+            <div className="mt-5 text-xl font-bold text-green-400 animate-bounce">
+              🎯 Lucky Number: {result}
+            </div>
+          )}
         </div>
-
-        {/* BUTTON */}
-        <button
-          onClick={spinWheel}
-          disabled={spinning}
-          className="
-            mt-8
-            px-5 py-2.5 sm:px-6 sm:py-3
-            text-sm sm:text-base
-            bg-yellow-400 hover:bg-yellow-500
-            rounded-lg font-bold shadow-md
-            active:scale-95 transition-all duration-150
-            disabled:opacity-60 disabled:cursor-not-allowed
-          "
-        >
-          {spinning ? "Spinning..." : "🍀 SPIN NOW"}
-        </button>
-
-        {/* RESULT */}
-        {result !== null && !spinning && (
-          <div className="mt-6 text-lg sm:text-xl md:text-2xl font-bold text-green-600 text-center">
-            🎯 Lucky Number: {result}
-          </div>
-        )}
       </div>
     </>
   );

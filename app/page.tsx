@@ -3,6 +3,7 @@
 import Navbar from "@/app/components/Navbar";
 import { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
+import LiveBar from "./components/LiveBar";
 
 export default function Home() {
   const [date, setDate] = useState("");
@@ -24,44 +25,32 @@ export default function Home() {
 
     setDate(`${dayName.toUpperCase()}, ${formattedDate.toUpperCase()}`);
 
-    document.title = `Kolkata FF Result Today ${formattedDate} Live Updates`;
+    document.title = `Kolkata FF Result Today ${formattedDate}`;
   }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen  text-white">
       <Navbar />
+      <LiveBar />
 
-      {/* 🔴 LIVE BAR */}
-      <div className="bg-red-500 text-white flex items-center overflow-hidden">
-        <div className="flex items-center gap-2 px-4 py-2 bg-red-600 font-bold whitespace-nowrap">
-          LIVE <span className="blink text-lg">🔴</span>
-        </div>
-
-        <div className="overflow-hidden w-full">
-          <div className="animate-scroll font-bold py-2">
-            | Daily Updated Result Website | Kolkata FF Result Today | Fast
-            Update | Check Now 🔥 |
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto p-3">
+      <div className="max-w-6xl mx-auto px-3 pt-4 pb-10">
+        
         {/* DATE */}
-        <div className="bg-yellow-400 text-center p-2 font-bold rounded">
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 text-black text-center py-2 rounded-lg font-bold shadow-md">
           🔴 {date}
         </div>
 
         {/* RESULT GRID */}
-        <div className="bg-white p-3 mt-3 rounded">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
+        <div className="bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-4 mt-4 rounded-xl shadow-lg">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
             {["135", "500", "169", "445", "135", "500", "169", "445"].map(
               (num, i) => (
                 <div
                   key={i}
-                  className="bg-gray-300 p-4 text-center font-bold rounded"
+                  className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-black p-4 text-center font-bold rounded-lg shadow hover:scale-105 transition"
                 >
-                  <p>{num}</p>
-                  <p>1</p>
+                  <p className="text-lg">{num}</p>
+                  <p className="text-sm">1</p>
                 </div>
               ),
             )}
@@ -71,138 +60,89 @@ export default function Home() {
         {/* BUTTONS */}
         <button
           onClick={() => location.reload()}
-          className="block mx-auto mt-4 bg-yellow-400 px-6 py-2 rounded-full font-bold"
+          className="block mx-auto mt-5 bg-gradient-to-r from-yellow-500 to-yellow-300 text-black px-8 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
         >
-          Refresh Karo
+          🔄 Refresh
         </button>
 
-        <button
-          onClick={() => location.reload()}
-          className="flex items-center justify-between mx-auto mt-4 bg-green-400 px-4 py-3 rounded-full font-bold w-full max-w-md shadow-md"
-        >
+        {/* DOWNLOAD */}
+        <button className="flex items-center justify-between mx-auto mt-5 bg-gradient-to-r from-green-400 to-green-600 px-4 py-3 rounded-xl font-bold w-full max-w-md shadow-lg hover:scale-105 transition">
           <img
             src="/images/kolkataff.png"
             alt="app"
             className="w-10 h-10 rounded-full"
           />
 
-          <div className="text-center flex-1">
+          <div className="text-center flex-1 text-black">
             <p className="text-sm">DOWNLOAD APP</p>
-            <p className="text-xs">Get Result Faster</p>
+            <p className="text-xs">Fast Result</p>
           </div>
 
-          <div className="text-lg">
-            <FaDownload />
-          </div>
+          <FaDownload className="text-black text-lg" />
         </button>
-        {/* RESULT GRID */}
-        <div className="bg-white p-3 mt-3 rounded">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
-            {["135", "500", "169", "445", "135", "500", "169", "445"].map(
-              (num, i) => (
-                <div
-                  key={i}
-                  className="bg-gray-300 p-4 text-center font-bold rounded"
-                >
-                  <p>{num}</p>
-                  <p>1</p>
-                </div>
-              ),
-            )}
-          </div>
-        </div>
 
-        {/* RESULT GRID */}
-        <div className="bg-white p-3 mt-3 rounded">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
-            {["135", "500", "169", "445", "135", "500", "169", "445"].map(
-              (num, i) => (
-                <div
-                  key={i}
-                  className="bg-gray-300 p-4 text-center font-bold rounded"
-                >
-                  <p>{num}</p>
-                  <p>1</p>
-                </div>
-              ),
-            )}
+        {/* MULTIPLE GRIDS */}
+        {[1, 2].map((_, idx) => (
+          <div
+            key={idx}
+            className="bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-4 mt-4 rounded-xl shadow-lg"
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
+              {["135", "500", "169", "445", "135", "500", "169", "445"].map(
+                (num, i) => (
+                  <div
+                    key={i}
+                    className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-black p-4 text-center font-bold rounded-lg shadow"
+                  >
+                    <p>{num}</p>
+                    <p>1</p>
+                  </div>
+                ),
+              )}
+            </div>
           </div>
-        </div>
+        ))}
 
-        <button
-          onClick={() => location.reload()}
-          className="block mx-auto mt-4 bg-yellow-400 px-6 py-2 rounded-full font-bold"
-        >
+        <button className="block mx-auto mt-6 bg-yellow-400 text-black px-6 py-2 rounded-full font-bold shadow hover:scale-105 transition">
           ⬇️ Load More
         </button>
 
-        {/* 🔥 SEO CONTENT START */}
-        <div className="bg-white p-4 mt-5 rounded shadow-sm leading-7">
-          <h1 className="text-xl font-bold mb-2">What is Kolkata FF?</h1>
+        {/* SEO CONTENT */}
+        <div className="bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-5 mt-6 rounded-xl leading-7 text-gray-300">
+          <h1 className="text-xl font-bold text-yellow-400 mb-2">
+            What is Kolkata FF?
+          </h1>
 
-          <p className="text-gray-700">
-            Kolkata FF (Kolkata Fatafat) is a popular number-based guessing game
-            played mainly in West Bengal. Many users visit online platforms
-            daily to check fast Kolkata FF results, old charts, and live
-            updates. This website provides today’s results and previous records
-            in one place for free.
+          <p>
+            Kolkata FF (Kolkata Fatafat) is a popular number-based guessing
+            game played mainly in West Bengal. Users check live results daily.
           </p>
 
-          <h2 className="text-lg font-bold mt-4">Kolkata FF Result Today</h2>
-
-          <p className="text-gray-700">
-            Kolkata Fatafat results are updated multiple times daily. Players
-            check results after each round to see if their selected number
-            matches the winning result. You can also explore past results and
-            10-day charts here easily.
-          </p>
-
-          <h2 className="text-lg font-bold mt-4">Is Kolkata FF Legal?</h2>
-
-          <p className="text-gray-700">
-            This game is considered illegal in many parts of India. It is played
-            at the user’s own risk. We only provide result information and do
-            not promote gambling in any way.
-          </p>
-
-          <h2 className="text-lg font-bold mt-4">Kolkata FF Tips</h2>
-
-          <p className="text-gray-700">
-            There is no guaranteed trick to win Kolkata FF. The game is
-            completely based on luck. Many online sources claim to provide fixed
-            numbers, but most of them are fake. Always avoid paying money for
-            such tips.
-          </p>
-
-          <h2 className="text-lg font-bold mt-4">
-            How to Check Kolkata FF Result
+          <h2 className="text-lg font-bold text-yellow-400 mt-4">
+            Kolkata FF Result Today
           </h2>
 
-          <ul className="list-disc pl-5 text-gray-700">
-            <li>Open this website</li>
-            <li>Find today’s result section</li>
-            <li>Match your number with result</li>
-            <li>If matched, you win</li>
-          </ul>
-
-          <h2 className="text-lg font-bold mt-4">Kolkata FF Old Result</h2>
-
-          <p className="text-gray-700">
-            You can check previous results using the result table available on
-            this page. It helps users analyze patterns and understand past
-            trends.
+          <p>
+            Results are updated multiple times daily. Players check after each
+            round.
           </p>
 
-          <h2 className="text-lg font-bold mt-4">Final Note</h2>
+          <h2 className="text-lg font-bold text-yellow-400 mt-4">
+            Is Kolkata FF Legal?
+          </h2>
 
-          <p className="text-gray-700">
-            Kolkata FF is purely a luck-based game. Always play responsibly and
-            never invest more than you can afford to lose. This website only
-            provides fast and accurate result updates for informational
-            purposes.
+          <p>
+            It is illegal in many regions. We only provide informational data.
+          </p>
+
+          <h2 className="text-lg font-bold text-yellow-400 mt-4">
+            Final Note
+          </h2>
+
+          <p>
+            This is a luck-based game. Always play responsibly.
           </p>
         </div>
-        {/* 🔥 SEO CONTENT END */}
       </div>
     </div>
   );
