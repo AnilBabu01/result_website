@@ -12,7 +12,8 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Tips", path: "/tips" },
     { name: "Lucky Number", path: "/luckynumber" },
-    { name: "Old", path: "/old" },
+    { name: "Old", path: "/old-kolkata-ff-fatafat-result" },
+    { name: "Patti", path: "/kolkata-ff-patti-list-chart-complete-full" },
   ];
 
   return (
@@ -20,7 +21,6 @@ export default function Navbar() {
       {/* Floating Navbar */}
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] md:w-[85%] z-50">
         <div className="flex items-center justify-between px-5 py-3 rounded-2xl bg-black/40 backdrop-blur-xl border border-yellow-500/30 shadow-lg">
-          
           {/* Logo */}
           <h1 className="text-yellow-400 font-bold text-lg tracking-wide">
             Kolkata fast result & Tips
