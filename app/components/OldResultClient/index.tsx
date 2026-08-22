@@ -2,34 +2,41 @@
 
 import { useRouter } from "next/navigation";
 
+type MonthItem = {
+  label: string;
+  month: number;
+  year: number;
+};
+
 export default function OldPage() {
   const router = useRouter();
 
-  // Generate months from Jan 2024 to May 2026
-  const generateMonths = () => {
-    const start = new Date(2024, 0);
-    const end = new Date(2026, 4);
+  // Generate only current year's months up to the current month.
+  // Example: If current month is August 2026,
+  // it will show January 2026 to August 2026.
+  const generateMonths = (): MonthItem[] => {
+    const now = new Date();
 
-    const months: { label: string; month: number; year: number }[] = [];
-    let current = new Date(start);
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0 = January, 7 = August
 
-    while (current <= end) {
-      const monthName = current.toLocaleString("default", {
+    const months: MonthItem[] = [];
+
+    for (let monthIndex = 0; monthIndex <= currentMonth; monthIndex++) {
+      const date = new Date(currentYear, monthIndex, 1);
+
+      const monthName = date.toLocaleString("default", {
         month: "long",
       });
 
-      const year = current.getFullYear();
-      const month = current.getMonth() + 1; // 1-12
-
       months.push({
-        label: `${monthName} ${year}`,
-        month,
-        year,
+        label: `${monthName} ${currentYear}`,
+        month: monthIndex + 1, // 1-12
+        year: currentYear,
       });
-
-      current.setMonth(current.getMonth() + 1);
     }
 
+    // Latest month first
     return months.reverse();
   };
 
@@ -51,18 +58,19 @@ export default function OldPage() {
 
         {/* MONTH GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {months.map((item, index) => (
+          {months.map((item) => (
             <button
-              key={index}
+              key={`${item.year}-${item.month}`}
+              type="button"
               className="group relative overflow-hidden bg-white/5 backdrop-blur-lg border border-yellow-500/20 rounded-xl p-5 shadow-lg hover:scale-[1.03] transition-all text-left"
               onClick={() => {
                 router.push(
-                  `/old-kolkata-ff-fatafat-result/monthly/${item.year}/${item.month}`,
+                  `/old-kolkata-ff-fatafat-result/monthly/${item.year}/${item.month}`
                 );
               }}
             >
               {/* Glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 opacity-0 group-hover:opacity-100 transition"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 opacity-0 group-hover:opacity-100 transition" />
 
               {/* Content */}
               <div className="relative z-10 flex items-center justify-between">
@@ -70,7 +78,10 @@ export default function OldPage() {
                   <p className="text-lg font-semibold text-yellow-400">
                     {item.label}
                   </p>
-                  <p className="text-sm text-gray-400">View full chart →</p>
+
+                  <p className="text-sm text-gray-400">
+                    View full chart →
+                  </p>
                 </div>
 
                 <div className="text-2xl">📁</div>
@@ -92,7 +103,8 @@ export default function OldPage() {
           </p>
 
           <p className="mt-3 text-green-400">
-            ⚠️ Results are for reference only. No guarantee of future outcomes.
+            ⚠️ Results are for reference only. No guarantee of future
+            outcomes.
           </p>
         </div>
       </div>

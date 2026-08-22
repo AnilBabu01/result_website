@@ -9,7 +9,6 @@ export const apiClient = createApi({
     baseUrl: BASE_URL,
 
     prepareHeaders: (headers) => {
-      // Next.js localStorage access
       if (typeof window !== "undefined") {
         const token = localStorage.getItem("authtoken");
 
@@ -22,25 +21,57 @@ export const apiClient = createApi({
     },
   }),
 
-  tagTypes: ["getmarketlist", "allMatch", "result30days"],
+  tagTypes: [
+    "getmarketlist",
+    "allMatch",
+    "result30days",
+    "monthlyResult",
+  ],
 
   endpoints: (builder) => ({
+    // -----------------------------
+    // 30 DAYS RESULT
+    // -----------------------------
     getResult30Days: builder.query({
-      query: (name) => ({
-        url: `https://admin.kolkataff.tech/api/get-result-30-days`,
+      query: () => ({
+        url: "api/get-result-30-days",
         method: "GET",
       }),
 
       providesTags: ["result30days"],
     }),
 
+    // -----------------------------
+    // APP DATA
+    // -----------------------------
     getAppData: builder.query({
       query: () => ({
-        url: `https://admin.kolkataff.tech/api/getdata`,
+        url: "api/getdata",
         method: "GET",
       }),
+    }),
+
+    // -----------------------------
+    // MONTHLY RESULT
+    // Example:
+    // getMonthlyResult({ year: 2026, month: 8 })
+    //
+    // API:
+    // /api/get-result-monthly/2026/8
+    // -----------------------------
+    getMonthlyResult: builder.query({
+      query: ({ year, month }) => ({
+        url: `api/get-result-monthly/${year}/${month}`,
+        method: "GET",
+      }),
+
+      providesTags: ["monthlyResult"],
     }),
   }),
 });
 
-export const { useGetResult30DaysQuery, useGetAppDataQuery } = apiClient;
+export const {
+  useGetResult30DaysQuery,
+  useGetAppDataQuery,
+  useGetMonthlyResultQuery,
+} = apiClient;
