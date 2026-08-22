@@ -4,6 +4,6 @@ export default function robots() {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://kolkataff.cloud/sitemap.xml",
+    sitemap: "https://kolkataff.tech/sitemap.xml",
   };
 }

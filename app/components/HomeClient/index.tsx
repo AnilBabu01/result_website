@@ -1,21 +1,57 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FaDownload } from "react-icons/fa";
+import {
+  useGetResult30DaysQuery,
+  useGetAppDataQuery,
+} from "../../redux/api/apiClient";
 
+type ResultItem = {
+  id?: number;
+  bazi_id: number;
+  created_at: string;
+  first_no: string;
+  last_no: string;
+};
 
-export const metadata = {
-  title: "Kolkata FF Result Today Live",
-  description:
-    "Live Kolkata FF Results Today. Check fastest updates, tips, lucky numbers and old results.",
+type ApiResponse = {
+  data: ResultItem[];
+};
+
+type TodayTableItem = {
+  no: number;
+  value: string;
+  result: string;
+};
+
+type HistoryDataItem = {
+  date: string;
+  values: string[];
+  results: string[];
 };
 
 export default function Home() {
   const [date, setDate] = useState("");
+  const [visibleHistoryCount, setVisibleHistoryCount] = useState(2);
+
+  const {
+    data: appData,
+  } = useGetAppDataQuery({});
+
+  // Query parameter matches static title parameter format
+  const {
+    data: rawResultData,
+    isLoading: resultLoading,
+    error: resultError,
+  } = useGetResult30DaysQuery("KOLKATA FATAFAT") as {
+    data?: ApiResponse;
+    isLoading: boolean;
+    error: unknown;
+  };
 
   useEffect(() => {
-    let today = new Date();
+    const today = new Date();
 
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -23,9 +59,9 @@ export default function Home() {
       year: "numeric",
     };
 
-    let formattedDate = today.toLocaleDateString("en-GB", options);
+    const formattedDate = today.toLocaleDateString("en-GB", options);
 
-    let dayName = today.toLocaleDateString("en-US", {
+    const dayName = today.toLocaleDateString("en-US", {
       weekday: "long",
     });
 
@@ -34,35 +70,121 @@ export default function Home() {
     document.title = `Kolkata FF Result Today ${formattedDate}`;
   }, []);
 
-  return (
-    <div className="min-h-screen  text-white">
-    
+  const todayDate = new Date().toISOString().split("T")[0];
+  const results: ResultItem[] = rawResultData?.data || [];
 
+  /* ==========================================
+     TODAY DATA LOGIC
+  ========================================== */
+  const todayTableData: TodayTableItem[] = useMemo(() => {
+    return results
+      .filter((item) => item.created_at === todayDate)
+      .sort((a, b) => a.bazi_id - b.bazi_id)
+      .map((item, index) => ({
+        no: index + 1,
+        value:
+          item.last_no && item.last_no !== "XXX"
+            ? item.last_no
+            : "-",
+        result:
+          item.first_no && item.first_no !== "X"
+            ? item.first_no
+            : "-",
+      }));
+  }, [results, todayDate]);
+
+  /* ==========================================
+     HISTORY DATA LOGIC
+  ========================================== */
+  const historyData: HistoryDataItem[] = useMemo(() => {
+    const historyGrouped = results
+      .filter((item) => item.created_at !== todayDate)
+      .reduce<Record<string, ResultItem[]>>((acc, item) => {
+        if (!acc[item.created_at]) {
+          acc[item.created_at] = [];
+        }
+        acc[item.created_at].push(item);
+        return acc;
+      }, {});
+
+    return Object.keys(historyGrouped)
+      .sort(
+        (a, b) =>
+          new Date(b).getTime() - new Date(a).getTime()
+      )
+      .map((dateStr) => {
+        const dayData = historyGrouped[dateStr].sort(
+          (a, b) => a.bazi_id - b.bazi_id
+        );
+
+        return {
+          date: new Date(dateStr).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+          values: dayData.map((item) =>
+            item.last_no === "XXX" ? "-" : item.last_no
+          ),
+          results: dayData.map((item) =>
+            item.first_no === "X" ? "-" : item.first_no
+          ),
+        };
+      });
+  }, [results, todayDate]);
+
+  if (resultLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-white">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-yellow-500 border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (resultError) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center text-white">
+        <p className="text-xl font-bold text-red-500">Failed to load data</p>
+        <button
+          onClick={() => location.reload()}
+          className="mt-4 rounded-lg bg-yellow-400 px-4 py-2 font-bold text-black"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen text-white">
       <div className="max-w-6xl mx-auto px-3 pt-4 pb-10">
-        
-        {/* DATE */}
+        {/* DATE HEADER */}
         <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 text-black text-center py-2 rounded-lg font-bold shadow-md">
           🔴 {date}
         </div>
 
-        {/* RESULT GRID */}
+        {/* TODAY RESULT GRID */}
         <div className="bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-4 mt-4 rounded-xl shadow-lg">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
-            {["135", "500", "169", "445", "135", "500", "169", "445"].map(
-              (num, i) => (
+          {todayTableData.length === 0 ? (
+            <p className="text-center font-bold text-gray-300 py-4">
+              No results available for today yet.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
+              {todayTableData.map((item) => (
                 <div
-                  key={i}
+                  key={item.no}
                   className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-black p-4 text-center font-bold rounded-lg shadow hover:scale-105 transition"
                 >
-                  <p className="text-lg">{num}</p>
-                  <p className="text-sm">1</p>
+                  <p className="text-lg">{item.value}</p>
+                  <p className="text-sm">{item.result}</p>
                 </div>
-              ),
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* BUTTONS */}
+        {/* REFRESH BUTTON */}
         <button
           onClick={() => location.reload()}
           className="block mx-auto mt-5 bg-gradient-to-r from-yellow-500 to-yellow-300 text-black px-8 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
@@ -70,7 +192,7 @@ export default function Home() {
           🔄 Refresh
         </button>
 
-        {/* DOWNLOAD */}
+        {/* DOWNLOAD APP BUTTON */}
         <button className="flex items-center justify-between mx-auto mt-5 bg-gradient-to-r from-green-400 to-green-600 px-4 py-3 rounded-xl font-bold w-full max-w-md shadow-lg hover:scale-105 transition">
           <img
             src="/images/kolkataff.png"
@@ -78,39 +200,53 @@ export default function Home() {
             className="w-10 h-10 rounded-full"
           />
 
-          <div className="text-center flex-1 text-black">
+          <a
+            href={appData?.data?.apk_url || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-center flex-1 text-black"
+          >
             <p className="text-sm">DOWNLOAD APP</p>
             <p className="text-xs">Fast Result</p>
-          </div>
+          </a>
 
           <FaDownload className="text-black text-lg" />
         </button>
 
-        {/* MULTIPLE GRIDS */}
-        {[1, 2].map((_, idx) => (
+        {/* HISTORICAL RESULTS GRIDS */}
+        {historyData.slice(0, visibleHistoryCount).map((history, idx) => (
           <div
             key={idx}
             className="bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-4 mt-4 rounded-xl shadow-lg"
           >
+            <p className="text-yellow-400 font-bold mb-3 text-center sm:text-left">
+              📅 {history.date}
+            </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
-              {["135", "500", "169", "445", "135", "500", "169", "445"].map(
-                (num, i) => (
-                  <div
-                    key={i}
-                    className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-black p-4 text-center font-bold rounded-lg shadow"
-                  >
-                    <p>{num}</p>
-                    <p>1</p>
-                  </div>
-                ),
-              )}
+              {history.values.map((val, i) => (
+                <div
+                  key={i}
+                  className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-black p-4 text-center font-bold rounded-lg shadow"
+                >
+                  <p className="text-lg">{val}</p>
+                  <p className="text-sm">{history.results[i]}</p>
+                </div>
+              ))}
             </div>
           </div>
         ))}
 
-        <button className="block mx-auto mt-6 bg-yellow-400 text-black px-6 py-2 rounded-full font-bold shadow hover:scale-105 transition">
-          ⬇️ Load More
-        </button>
+        {/* LOAD MORE BUTTON */}
+        {visibleHistoryCount < historyData.length && (
+          <button
+            onClick={() =>
+              setVisibleHistoryCount((prev) => prev + 5)
+            }
+            className="block mx-auto mt-6 bg-yellow-400 text-black px-6 py-2 rounded-full font-bold shadow hover:scale-105 transition"
+          >
+            ⬇️ Load More
+          </button>
+        )}
 
         {/* SEO CONTENT */}
         <div className="bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-5 mt-6 rounded-xl leading-7 text-gray-300">
@@ -119,8 +255,8 @@ export default function Home() {
           </h1>
 
           <p>
-            Kolkata FF (Kolkata Fatafat) is a popular number-based guessing
-            game played mainly in West Bengal. Users check live results daily.
+            Kolkata FF (Kolkata Fatafat) is a popular number-based guessing game
+            played mainly in West Bengal. Users check live results daily.
           </p>
 
           <h2 className="text-lg font-bold text-yellow-400 mt-4">
@@ -140,13 +276,9 @@ export default function Home() {
             It is illegal in many regions. We only provide informational data.
           </p>
 
-          <h2 className="text-lg font-bold text-yellow-400 mt-4">
-            Final Note
-          </h2>
+          <h2 className="text-lg font-bold text-yellow-400 mt-4">Final Note</h2>
 
-          <p>
-            This is a luck-based game. Always play responsibly.
-          </p>
+          <p>This is a luck-based game. Always play responsibly.</p>
         </div>
       </div>
     </div>

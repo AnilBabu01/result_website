@@ -17,6 +17,7 @@ export default function Page() {
     description: "Live Kolkata FF Results and Tips",
   };
 
+  
   return (
     <>
       {/* SEO STRUCTURED DATA */}
