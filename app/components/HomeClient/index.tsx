@@ -51,12 +51,6 @@ const RESULT_NAME = "KOLKATA FATAFAT";
    DATE HELPERS
 ========================================================= */
 
-/**
- * Returns today's date in local browser timezone.
- *
- * Example:
- * 2026-08-25
- */
 function getLocalDateString(): string {
   const now = new Date();
 
@@ -67,18 +61,9 @@ function getLocalDateString(): string {
   return `${year}-${month}-${day}`;
 }
 
-/**
- * Converts API created_at into YYYY-MM-DD.
- *
- * Handles:
- *
- * 2026-08-25
- * 2026-08-25T10:30:00
- * 2026-08-25T10:30:00.000Z
- * 2026-08-25 10:30:00
- * 2026-08-25 10:30:00+05:30
- */
-function normalizeResultDate(createdAt: string | null | undefined): string {
+function normalizeResultDate(
+  createdAt: string | null | undefined,
+): string {
   if (!createdAt) {
     return "";
   }
@@ -89,33 +74,18 @@ function normalizeResultDate(createdAt: string | null | undefined): string {
     return "";
   }
 
-  /*
-   * Most APIs start with YYYY-MM-DD.
-   *
-   * Extracting the first 10 characters is safer than:
-   *
-   * new Date(createdAt).toISOString()
-   *
-   * because converting to UTC can move the date backward/forward.
-   */
   const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
 
   if (match) {
     return `${match[1]}-${match[2]}-${match[3]}`;
   }
 
-  /*
-   * Fallback for DD-MM-YYYY
-   */
   const ddmmyyyy = value.match(/^(\d{2})[-/](\d{2})[-/](\d{4})/);
 
   if (ddmmyyyy) {
     return `${ddmmyyyy[3]}-${ddmmyyyy[2]}-${ddmmyyyy[1]}`;
   }
 
-  /*
-   * Final fallback
-   */
   const parsed = new Date(value);
 
   if (!Number.isNaN(parsed.getTime())) {
@@ -129,9 +99,6 @@ function normalizeResultDate(createdAt: string | null | undefined): string {
   return "";
 }
 
-/**
- * Format YYYY-MM-DD for history.
- */
 function formatHistoryDate(dateString: string): string {
   const parts = dateString.split("-");
 
@@ -156,18 +123,12 @@ function formatHistoryDate(dateString: string): string {
   });
 }
 
-/**
- * Safely convert bazi_id to number.
- */
 function getBaziId(item: ResultItem): number {
   const id = Number(item.bazi_id);
 
   return Number.isFinite(id) ? id : 999999;
 }
 
-/**
- * Convert result values.
- */
 function getValue(value: string | null | undefined): string {
   if (!value) {
     return "-";
@@ -240,7 +201,9 @@ export default function Home() {
         weekday: "long",
       });
 
-      setDate(`${dayName.toUpperCase()}, ${formattedDate.toUpperCase()}`);
+      setDate(
+        `${dayName.toUpperCase()}, ${formattedDate.toUpperCase()}`,
+      );
 
       setTodayDate(getLocalDateString());
 
@@ -249,9 +212,6 @@ export default function Home() {
 
     updateDate();
 
-    /*
-     * Update date after midnight automatically.
-     */
     const timer = window.setInterval(() => {
       updateDate();
     }, 60000);
@@ -270,13 +230,6 @@ export default function Home() {
       return [];
     }
 
-    /*
-     * API response:
-     *
-     * {
-     *   data: [...]
-     * }
-     */
     if (Array.isArray(rawResultData)) {
       return rawResultData;
     }
@@ -295,10 +248,12 @@ export default function Home() {
   const apkUrl = appData?.data?.apk_url || "#";
 
   const whatsappGroup =
-    appData?.data?.whatsaap_group || "https://chat.whatsapp.com";
+    appData?.data?.whatsaap_group ||
+    "https://chat.whatsapp.com";
 
   const telegramChannel =
-    appData?.data?.telegram_channel || "https://web.telegram.org/k/";
+    appData?.data?.telegram_channel ||
+    "https://web.telegram.org/k/";
 
   /* =======================================================
      TODAY RESULTS
@@ -311,18 +266,10 @@ export default function Home() {
 
     return results
       .filter((item) => {
-        const resultDate = normalizeResultDate(item.created_at);
-
-        /*
-         * IMPORTANT:
-         *
-         * Do NOT compare:
-         *
-         * item.created_at === todayDate
-         *
-         * because created_at can contain time.
-         */
-        return resultDate === todayDate;
+        return (
+          normalizeResultDate(item.created_at) ===
+          todayDate
+        );
       })
       .sort((a, b) => getBaziId(a) - getBaziId(b));
   }, [results, todayDate]);
@@ -347,18 +294,14 @@ export default function Home() {
     const historyGrouped: Record<string, ResultItem[]> = {};
 
     results.forEach((item) => {
-      const resultDate = normalizeResultDate(item.created_at);
+      const resultDate = normalizeResultDate(
+        item.created_at,
+      );
 
-      /*
-       * Ignore invalid dates.
-       */
       if (!resultDate) {
         return;
       }
 
-      /*
-       * Today should NEVER appear inside history.
-       */
       if (resultDate === todayDate) {
         return;
       }
@@ -379,40 +322,23 @@ export default function Home() {
       })
       .map((dateStr) => {
         const dayData = historyGrouped[dateStr]
-          .sort((a, b) => getBaziId(a) - getBaziId(b))
+          .sort(
+            (a, b) =>
+              getBaziId(a) - getBaziId(b),
+          )
           .slice(0, 8);
 
         return {
           date: formatHistoryDate(dateStr),
-
-          values: dayData.map((item) => getValue(item.last_no)),
-
-          results: dayData.map((item) => getValue(item.first_no)),
+          values: dayData.map((item) =>
+            getValue(item.last_no),
+          ),
+          results: dayData.map((item) =>
+            getValue(item.first_no),
+          ),
         };
       });
   }, [results, todayDate]);
-
-  /* =======================================================
-     DEBUG
-  ======================================================= */
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      console.log("TODAY DATE:", todayDate);
-      console.log("ALL RESULTS:", results);
-
-      console.log(
-        "NORMALIZED DATES:",
-        results.map((item) => ({
-          created_at: item.created_at,
-          normalized: normalizeResultDate(item.created_at),
-          isToday: normalizeResultDate(item.created_at) === todayDate,
-        })),
-      );
-
-      console.log("TODAY RESULTS:", todayResults);
-    }
-  }, [results, todayDate, todayResults]);
 
   /* =======================================================
      LOADING
@@ -434,7 +360,9 @@ export default function Home() {
             "
           />
 
-          <p className="font-bold text-gray-700">Loading Result...</p>
+          <p className="font-bold text-gray-700">
+            Loading Result...
+          </p>
         </div>
       </div>
     );
@@ -454,7 +382,9 @@ export default function Home() {
             Failed to Load Result
           </h2>
 
-          <p className="text-gray-500 mt-2">Please try again.</p>
+          <p className="text-gray-500 mt-2">
+            Please try again.
+          </p>
 
           <button
             onClick={() => refetch()}
@@ -485,6 +415,15 @@ export default function Home() {
 
   /* =======================================================
      RESULT TABLE
+     
+     IMPORTANT MOBILE FIX:
+     
+     1. Parent width = full.
+     2. overflow-x-auto on wrapper.
+     3. Table has fixed minimum width.
+     4. Each column has fixed width.
+     5. Mobile gets horizontal scrolling.
+     6. Desktop remains full width.
   ======================================================= */
 
   const renderResultTable = (
@@ -492,96 +431,171 @@ export default function Home() {
     resultsList: string[],
     showColumnNumbers = true,
   ) => {
-    const columns = Array.from({ length: 8 }, (_, index) => ({
-      number: index + 1,
-      value: values[index] || "-",
-      result: resultsList[index] || "-",
-    }));
+    const columns = Array.from(
+      { length: 8 },
+      (_, index) => ({
+        number: index + 1,
+        value: values[index] || "-",
+        result: resultsList[index] || "-",
+      }),
+    );
 
     return (
-      <div className="w-full overflow-x-auto ">
-        <table className="w-full min-w-[700px] border-collapse table-fixed">
-          <thead>
-            <tr className="bg-[#101827]">
+      <div className="w-full">
+        {/* MOBILE SCROLL HINT */}
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            bg-gray-100
+            px-3
+            py-2
+            text-xs
+            font-bold
+            text-gray-500
+            sm:hidden
+          "
+        >
+          <span>← Swipe table →</span>
+
+          <span>
+            8 Columns
+          </span>
+        </div>
+
+        {/* SCROLL CONTAINER */}
+        <div
+          className="
+            w-full
+            overflow-x-auto
+            overflow-y-hidden
+            overscroll-x-contain
+            touch-pan-x
+            scrollbar-thin
+            scrollbar-thumb-yellow-400
+            scrollbar-track-gray-200
+          "
+          style={{
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          {/* 
+            IMPORTANT:
+            Do NOT use w-full here.
+
+            The table must remain wide enough on mobile
+            so the user can horizontally scroll through
+            all 8 columns.
+          */}
+          <table
+            className="
+              w-full
+              min-w-[720px]
+              table-fixed
+              border-collapse
+            "
+          >
+            <colgroup>
               {columns.map((column) => (
-                <th
+                <col
                   key={column.number}
-                  className="
-                    h-[62px]
-                    border-gray-500/60
-                    px-2
-                    text-center
-                    text-white
-                    text-lg
-                    sm:text-xl
-                    font-black
-                   "
-                >
-                  {showColumnNumbers ? column.number : ""}
-                </th>
+                  className="w-[90px] sm:w-auto"
+                />
               ))}
-            </tr>
-          </thead>
+            </colgroup>
 
-          <tbody>
-            {/* FIRST RESULT ROW */}
-            <tr className="bg-white">
-              {columns.map((column) => (
-                <td
-                  key={`value-${column.number}`}
-                  className="
-                    h-[67px]
-                    border-r
-                    border-b
-                    border-gray-300
-                    px-2
-                    text-center
-                    last:border-r-0
-                  "
-                >
-                  <span
+            <thead>
+              <tr className="bg-[#101827]">
+                {columns.map((column) => (
+                  <th
+                    key={column.number}
                     className="
+                      h-[58px]
+                      min-w-[90px]
+                      border-r
+                      border-gray-600
+                      px-2
+                      text-center
                       text-lg
                       sm:text-xl
                       font-black
-                      text-gray-800
+                      text-white
+                      last:border-r-0
                     "
                   >
-                    {column.value}
-                  </span>
-                </td>
-              ))}
-            </tr>
+                    {showColumnNumbers
+                      ? column.number
+                      : ""}
+                  </th>
+                ))}
+              </tr>
+            </thead>
 
-            {/* SECOND RESULT ROW */}
-            <tr className="bg-[#fff9e6]">
-              {columns.map((column) => (
-                <td
-                  key={`result-${column.number}`}
-                  className="
-                    h-[67px]
-                    border-r
-                    border-gray-300
-                    px-2
-                    text-center
-                    last:border-r-0
-                  "
-                >
-                  <span
+            <tbody>
+              {/* FIRST ROW */}
+              <tr className="bg-white">
+                {columns.map((column) => (
+                  <td
+                    key={`value-${column.number}`}
                     className="
-                      text-lg
-                      sm:text-xl
-                      font-black
-                      text-red-600
+                      h-[68px]
+                      min-w-[90px]
+                      border-r
+                      border-b
+                      border-gray-300
+                      px-2
+                      text-center
+                      last:border-r-0
                     "
                   >
-                    {column.result}
-                  </span>
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+                    <span
+                      className="
+                        whitespace-nowrap
+                        text-lg
+                        sm:text-xl
+                        font-black
+                        text-gray-800
+                      "
+                    >
+                      {column.value}
+                    </span>
+                  </td>
+                ))}
+              </tr>
+
+              {/* SECOND ROW */}
+              <tr className="bg-[#fff9e6]">
+                {columns.map((column) => (
+                  <td
+                    key={`result-${column.number}`}
+                    className="
+                      h-[68px]
+                      min-w-[90px]
+                      border-r
+                      border-gray-300
+                      px-2
+                      text-center
+                      last:border-r-0
+                    "
+                  >
+                    <span
+                      className="
+                        whitespace-nowrap
+                        text-lg
+                        sm:text-xl
+                        font-black
+                        text-red-600
+                      "
+                    >
+                      {column.result}
+                    </span>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };
@@ -591,7 +605,7 @@ export default function Home() {
   ======================================================= */
 
   return (
-    <main className="min-h-screen bg-[#eef0f6] text-gray-900">
+    <main className="min-h-screen overflow-x-hidden bg-[#eef0f6] text-gray-900">
       <div
         className="
           mx-auto
@@ -605,11 +619,12 @@ export default function Home() {
         "
       >
         {/* =================================================
-            MAIN RESULT CARD
+            TODAY RESULT
         ================================================= */}
 
         <section
           className="
+            w-full
             overflow-hidden
             rounded-[22px]
             border-[3px]
@@ -618,7 +633,7 @@ export default function Home() {
             shadow-[0_15px_40px_rgba(0,0,0,0.18)]
           "
         >
-          {/* RESULT TITLE */}
+          {/* TITLE */}
 
           <div
             className="
@@ -635,7 +650,7 @@ export default function Home() {
             <h1
               className="
                 text-2xl
-                sm:text-1xl
+                sm:text-3xl
                 font-black
                 uppercase
                 tracking-tight
@@ -648,7 +663,7 @@ export default function Home() {
             <p
               className="
                 mt-1
-                text-base
+                text-sm
                 sm:text-lg
                 font-bold
                 text-black
@@ -660,9 +675,9 @@ export default function Home() {
 
           {/* TODAY TABLE */}
 
-          <div className="p-0 sm:p-1">
+          <div className="w-full p-0 sm:p-1">
             {todayTableData.length === 0 ? (
-              <div className="bg-white py-12 text-center px-4">
+              <div className="bg-white px-4 py-12 text-center">
                 <p className="text-lg font-bold text-gray-500">
                   No results available for today yet.
                 </p>
@@ -687,12 +702,21 @@ export default function Home() {
                     disabled:opacity-60
                   "
                 >
-                  <FaSyncAlt className={resultFetching ? "animate-spin" : ""} />
+                  <FaSyncAlt
+                    className={
+                      resultFetching
+                        ? "animate-spin"
+                        : ""
+                    }
+                  />
 
-                  {resultFetching ? "Checking..." : "Check Again"}
+                  {resultFetching
+                    ? "Checking..."
+                    : "Check Again"}
                 </button>
 
-                {process.env.NODE_ENV === "development" && (
+                {process.env.NODE_ENV ===
+                  "development" && (
                   <p className="mt-3 text-xs text-gray-400">
                     Today: {todayDate}
                   </p>
@@ -700,12 +724,20 @@ export default function Home() {
               </div>
             ) : (
               renderResultTable(
-                todayTableData.map((item) => item.value),
-                todayTableData.map((item) => item.result),
+                todayTableData.map(
+                  (item) => item.value,
+                ),
+                todayTableData.map(
+                  (item) => item.result,
+                ),
               )
             )}
           </div>
         </section>
+
+        {/* =================================================
+            UPDATE BUTTONS
+        ================================================= */}
 
         <section
           id="updates"
@@ -717,7 +749,7 @@ export default function Home() {
             gap-3
           "
         >
-          {/* DOWNLOAD APP */}
+          {/* DOWNLOAD */}
 
           <a
             href={apkUrl}
@@ -752,9 +784,13 @@ export default function Home() {
             />
 
             <div className="flex-1 text-center text-black">
-              <p className="text-base font-black">DOWNLOAD APP</p>
+              <p className="text-base font-black">
+                DOWNLOAD APP
+              </p>
 
-              <p className="text-xs font-bold">Fast Result</p>
+              <p className="text-xs font-bold">
+                Fast Result
+              </p>
             </div>
 
             <FaDownload className="text-xl text-black" />
@@ -786,12 +822,18 @@ export default function Home() {
             <FaWhatsapp className="text-3xl text-white" />
 
             <div className="flex-1 text-center text-white">
-              <p className="text-base font-black">JOIN WHATSAPP GROUP</p>
+              <p className="text-base font-black">
+                JOIN WHATSAPP GROUP
+              </p>
 
-              <p className="text-xs font-bold">Get Latest Updates</p>
+              <p className="text-xs font-bold">
+                Get Latest Updates
+              </p>
             </div>
 
-            <span className="text-2xl font-bold text-white">→</span>
+            <span className="text-2xl font-bold text-white">
+              →
+            </span>
           </a>
 
           {/* TELEGRAM */}
@@ -820,12 +862,18 @@ export default function Home() {
             <FaTelegramPlane className="text-3xl text-white" />
 
             <div className="flex-1 text-center text-white">
-              <p className="text-base font-black">JOIN TELEGRAM CHANNEL</p>
+              <p className="text-base font-black">
+                JOIN TELEGRAM CHANNEL
+              </p>
 
-              <p className="text-xs font-bold">Latest Result Updates</p>
+              <p className="text-xs font-bold">
+                Latest Result Updates
+              </p>
             </div>
 
-            <span className="text-2xl font-bold text-white">→</span>
+            <span className="text-2xl font-bold text-white">
+              →
+            </span>
           </a>
         </section>
 
@@ -834,11 +882,14 @@ export default function Home() {
         ================================================= */}
 
         <section id="history" className="mt-7">
-          {historyData.slice(0, visibleHistoryCount).map((history) => (
-            <div
-              key={history.date}
-              className="
+          {historyData
+            .slice(0, visibleHistoryCount)
+            .map((history) => (
+              <div
+                key={history.date}
+                className="
                   mb-5
+                  w-full
                   overflow-hidden
                   rounded-2xl
                   border-2
@@ -846,11 +897,11 @@ export default function Home() {
                   bg-white
                   shadow-lg
                 "
-            >
-              {/* HISTORY HEADER */}
+              >
+                {/* HEADER */}
 
-              <div
-                className="
+                <div
+                  className="
                     bg-gradient-to-r
                     from-yellow-400
                     to-orange-400
@@ -859,25 +910,35 @@ export default function Home() {
                     text-center
                     sm:text-left
                   "
-              >
-                <p className="font-black text-black">📅 {history.date}</p>
+                >
+                  <p className="font-black text-black">
+                    📅 {history.date}
+                  </p>
+                </div>
+
+                {/* TABLE */}
+
+                {renderResultTable(
+                  history.values,
+                  history.results,
+                )}
               </div>
-
-              {/* HISTORY TABLE */}
-
-              {renderResultTable(history.values, history.results)}
-            </div>
-          ))}
+            ))}
         </section>
 
         {/* =================================================
             LOAD MORE
         ================================================= */}
 
-        {visibleHistoryCount < historyData.length && (
+        {visibleHistoryCount <
+          historyData.length && (
           <div className="flex justify-center">
             <button
-              onClick={() => setVisibleHistoryCount((prev) => prev + 5)}
+              onClick={() =>
+                setVisibleHistoryCount(
+                  (prev) => prev + 5,
+                )
+              }
               className="
                 rounded-full
                 bg-yellow-400
@@ -897,7 +958,7 @@ export default function Home() {
         )}
 
         {/* =================================================
-            SEO CONTENT
+            SEO
         ================================================= */}
 
         <section
@@ -916,8 +977,9 @@ export default function Home() {
           </h2>
 
           <p className="mt-2 leading-7 text-gray-600">
-            Kolkata FF (Kolkata Fatafat) is a number-based guessing game played
-            mainly in West Bengal. Users check results daily.
+            Kolkata FF (Kolkata Fatafat) is a
+            number-based guessing game played mainly
+            in West Bengal. Users check results daily.
           </p>
 
           <h2 className="mt-5 text-xl font-black text-yellow-600">
@@ -925,8 +987,9 @@ export default function Home() {
           </h2>
 
           <p className="mt-2 leading-7 text-gray-600">
-            Results are updated multiple times daily. Users can check the latest
-            available result after each round.
+            Results are updated multiple times daily.
+            Users can check the latest available result
+            after each round.
           </p>
 
           <h2 className="mt-5 text-xl font-black text-yellow-600">
@@ -934,9 +997,10 @@ export default function Home() {
           </h2>
 
           <p className="mt-2 leading-7 text-gray-600">
-            This page provides informational result data. Number-based games can
-            involve financial risk. Please follow applicable local laws and play
-            responsibly.
+            This page provides informational result
+            data. Number-based games can involve
+            financial risk. Please follow applicable
+            local laws and play responsibly.
           </p>
         </section>
       </div>
@@ -957,6 +1021,7 @@ export default function Home() {
           fixed
           bottom-5
           right-5
+          z-50
           flex
           h-14
           w-14
