@@ -12,22 +12,17 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Tips", path: "/tips" },
     { name: "Lucky Number", path: "/luckynumber" },
-    // { name: "Old", path: "/old-kolkata-ff-fatafat-result" },
     { name: "Patti", path: "/kolkata-ff-patti-list-chart-complete-full" },
   ];
 
-  // Close menu when route changes
+  // Close mobile menu when route changes
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
   // Prevent body scrolling when mobile menu is open
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = open ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -36,21 +31,17 @@ export default function Navbar() {
 
   return (
     <>
-      {/* =========================
+      {/* =====================================================
           DESKTOP / MAIN NAVBAR
-      ========================== */}
-      <header className="fixed top-3 left-0 right-0 z-[100] px-3 sm:px-5">
+      ====================================================== */}
+      <header className="fixed top-0 left-0 right-0 z-50 w-full">
         <nav
           className="
-            mx-auto
             w-full
-            max-w-6xl
-            rounded-2xl
-            border
-            border-white/10
-            bg-[#0b1020]/80
-            backdrop-blur-2xl
-            shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+            border-b
+            border-yellow-500
+            bg-yellow-400
+            shadow-[0_10px_40px_rgba(0,0,0,0.20)]
           "
         >
           <div className="flex min-h-[64px] items-center justify-between px-4 sm:px-6">
@@ -70,11 +61,11 @@ export default function Navbar() {
                   justify-center
                   rounded-xl
                   bg-gradient-to-br
-                  from-violet-500
-                  via-purple-500
-                  to-blue-500
+                  from-violet-600
+                  via-purple-600
+                  to-blue-600
                   shadow-lg
-                  shadow-purple-500/30
+                  shadow-purple-700/30
                   transition
                   duration-300
                   group-hover:scale-105
@@ -85,11 +76,27 @@ export default function Navbar() {
 
               {/* Logo Text */}
               <div className="hidden xs:block sm:block">
-                <h1 className="text-sm font-extrabold tracking-wide text-white sm:text-base">
+                <h1
+                  className="
+                    text-sm
+                    font-extrabold
+                    tracking-wide
+                    text-black
+                    sm:text-base
+                  "
+                >
                   Kolkata Fast
                 </h1>
 
-                <p className="text-[10px] font-medium tracking-widest text-purple-300 uppercase">
+                <p
+                  className="
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-widest
+                    text-purple-800
+                  "
+                >
                   Result & Tips
                 </p>
               </div>
@@ -114,19 +121,30 @@ export default function Navbar() {
                       px-4
                       py-2.5
                       text-sm
-                      font-semibold
+                      font-bold
                       transition-all
                       duration-300
                       ${
                         isActive
-                          ? "bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-lg shadow-violet-500/25"
-                          : "text-slate-300 hover:bg-white/5 hover:text-white"
+                          ? `
+                            bg-gradient-to-r
+                            from-violet-600
+                            to-blue-600
+                            text-white
+                            shadow-lg
+                            shadow-violet-700/30
+                          `
+                          : `
+                            text-black
+                            hover:bg-black/10
+                            hover:text-black
+                          `
                       }
                     `}
                   >
                     {item.name}
 
-                    {/* Active indicator */}
+                    {/* Active Indicator */}
                     {isActive && (
                       <span
                         className="
@@ -160,28 +178,28 @@ export default function Navbar() {
                 justify-center
                 rounded-xl
                 border
-                border-white/10
-                bg-white/5
-                text-white
+                border-black/10
+                bg-black/5
+                text-black
                 transition
                 duration-300
-                hover:bg-violet-500/20
+                hover:bg-black/10
                 md:hidden
               "
             >
               <div className="flex w-5 flex-col gap-1.5">
-                <span className="h-0.5 w-full rounded-full bg-white" />
-                <span className="h-0.5 w-4/5 rounded-full bg-purple-300" />
-                <span className="h-0.5 w-full rounded-full bg-white" />
+                <span className="h-0.5 w-full rounded-full bg-black" />
+                <span className="h-0.5 w-4/5 rounded-full bg-purple-700" />
+                <span className="h-0.5 w-full rounded-full bg-black" />
               </div>
             </button>
           </div>
         </nav>
       </header>
 
-      {/* =========================
+      {/* =====================================================
           MOBILE OVERLAY
-      ========================== */}
+      ====================================================== */}
       <div
         className={`
           fixed
@@ -201,9 +219,9 @@ export default function Navbar() {
         onClick={() => setOpen(false)}
       />
 
-      {/* =========================
+      {/* =====================================================
           MOBILE DRAWER
-      ========================== */}
+      ====================================================== */}
       <aside
         className={`
           fixed
@@ -257,12 +275,24 @@ export default function Navbar() {
         />
 
         {/* ================= MOBILE HEADER ================= */}
-        <div className="relative flex items-center justify-between border-b border-white/10 px-5 py-5">
+        <div
+          className="
+            relative
+            flex
+            items-center
+            justify-between
+            border-b
+            border-white/10
+            px-5
+            py-5
+          "
+        >
           <Link
             href="/"
             onClick={() => setOpen(false)}
             className="flex items-center gap-3"
           >
+            {/* Mobile Logo */}
             <div
               className="
                 flex
@@ -272,8 +302,8 @@ export default function Navbar() {
                 justify-center
                 rounded-xl
                 bg-gradient-to-br
-                from-violet-500
-                to-blue-500
+                from-violet-600
+                to-blue-600
                 shadow-lg
                 shadow-violet-500/20
               "
@@ -285,13 +315,22 @@ export default function Navbar() {
               <h2 className="text-sm font-bold text-white">
                 Kolkata Fast
               </h2>
-              <p className="text-[10px] tracking-widest text-purple-300 uppercase">
+
+              <p
+                className="
+                  text-[10px]
+                  font-bold
+                  uppercase
+                  tracking-widest
+                  text-purple-300
+                "
+              >
                 Result & Tips
               </p>
             </div>
           </Link>
 
-          {/* Close */}
+          {/* ================= CLOSE BUTTON ================= */}
           <button
             type="button"
             aria-label="Close menu"
@@ -307,7 +346,7 @@ export default function Navbar() {
               border-white/10
               bg-white/5
               text-xl
-              text-slate-300
+              text-white
               transition
               hover:bg-red-500/10
               hover:text-red-400
@@ -319,7 +358,17 @@ export default function Navbar() {
 
         {/* ================= MOBILE NAV ================= */}
         <div className="relative flex flex-1 flex-col px-5 py-7">
-          <p className="mb-4 px-2 text-[11px] font-bold tracking-[0.2em] text-slate-500 uppercase">
+          <p
+            className="
+              mb-4
+              px-2
+              text-[11px]
+              font-bold
+              uppercase
+              tracking-[0.2em]
+              text-slate-400
+            "
+          >
             Navigation
           </p>
 
@@ -348,8 +397,19 @@ export default function Navbar() {
                     duration-300
                     ${
                       isActive
-                        ? "bg-gradient-to-r from-violet-600/90 to-blue-600/80 text-white shadow-lg shadow-violet-500/20"
-                        : "text-slate-300 hover:bg-white/5 hover:text-white"
+                        ? `
+                          bg-gradient-to-r
+                          from-violet-600/90
+                          to-blue-600/80
+                          text-white
+                          shadow-lg
+                          shadow-violet-500/20
+                        `
+                        : `
+                          text-white
+                          hover:bg-white/5
+                          hover:text-white
+                        `
                     }
                   `}
                 >
@@ -368,7 +428,7 @@ export default function Navbar() {
                       ${
                         isActive
                           ? "bg-white/15 text-white"
-                          : "bg-white/5 text-slate-500 group-hover:text-purple-300"
+                          : "bg-white/5 text-slate-300 group-hover:text-purple-300"
                       }
                     `}
                   >
@@ -383,11 +443,13 @@ export default function Navbar() {
                   {/* Arrow */}
                   <span
                     className={`
-                      text-lg transition-transform duration-300
+                      text-lg
+                      transition-transform
+                      duration-300
                       ${
                         isActive
                           ? "translate-x-0 text-white"
-                          : "-translate-x-1 text-slate-600 group-hover:translate-x-0 group-hover:text-purple-300"
+                          : "-translate-x-1 text-slate-400 group-hover:translate-x-0 group-hover:text-purple-300"
                       }
                     `}
                   >
@@ -413,14 +475,28 @@ export default function Navbar() {
               "
             >
               <div className="mb-2 flex items-center gap-2">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
+                <span
+                  className="
+                    h-2
+                    w-2
+                    animate-pulse
+                    rounded-full
+                    bg-green-400
+                  "
+                />
 
                 <span className="text-xs font-semibold text-green-300">
                   Live Updates
                 </span>
               </div>
 
-              <p className="text-xs leading-relaxed text-slate-400">
+              <p
+                className="
+                  text-xs
+                  leading-relaxed
+                  text-slate-300
+                "
+              >
                 Check the latest Kolkata Fast results, tips and lucky
                 numbers.
               </p>
