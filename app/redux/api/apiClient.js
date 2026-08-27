@@ -34,7 +34,7 @@ export const apiClient = createApi({
     // -----------------------------
     getResult30Days: builder.query({
       query: () => ({
-        url: "api/get-result-30-days",
+        url: "https://admin.lakshmibet.xyz/api/get-result-30-days",
         method: "GET",
       }),
 
@@ -61,7 +61,7 @@ export const apiClient = createApi({
     // -----------------------------
     getMonthlyResult: builder.query({
       query: ({ year, month }) => ({
-        url: `api/get-result-monthly/${year}/${month}`,
+        url: `https://admin.lakshmibet.xyz/api/get-result-monthly/${year}/${month}`,
         method: "GET",
       }),
 
