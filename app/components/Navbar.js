@@ -46,10 +46,7 @@ export default function Navbar() {
         >
           <div className="flex min-h-[64px] items-center justify-between px-4 sm:px-6">
             {/* ================= LOGO ================= */}
-            <Link
-              href="/"
-              className="group flex min-w-0 items-center gap-2"
-            >
+            <Link href="/" className="group flex min-w-0 items-center gap-2">
               {/* Logo Icon */}
               <div
                 className="
@@ -60,18 +57,12 @@ export default function Navbar() {
                   items-center
                   justify-center
                   rounded-xl
-                  bg-gradient-to-br
-                  from-violet-600
-                  via-purple-600
-                  to-blue-600
-                  shadow-lg
-                  shadow-purple-700/30
-                  transition
-                  duration-300
+                 
+                
                   group-hover:scale-105
                 "
               >
-                <span className="text-lg font-black text-white">K</span>
+                <img src="/images/kolkataff.png" alt="Kolkata FF" />
               </div>
 
               {/* Logo Text */}
@@ -85,7 +76,7 @@ export default function Navbar() {
                     sm:text-base
                   "
                 >
-                  Kolkata Fast
+                  Fast Result
                 </h1>
 
                 <p
@@ -312,9 +303,7 @@ export default function Navbar() {
             </div>
 
             <div>
-              <h2 className="text-sm font-bold text-white">
-                Kolkata Fast
-              </h2>
+              <h2 className="text-sm font-bold text-white">Kolkata Fast</h2>
 
               <p
                 className="
@@ -497,8 +486,7 @@ export default function Navbar() {
                   text-slate-300
                 "
               >
-                Check the latest Kolkata Fast results, tips and lucky
-                numbers.
+                Check the latest Kolkata Fast results, tips and lucky numbers.
               </p>
             </div>
           </div>
