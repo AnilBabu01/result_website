@@ -29,7 +29,7 @@ export default function OldPage() {
       {/* Title Section */}
       <div className="text-center py-6 px-4">
         <h1 className="text-2xl md:text-3xl font-bold">
-          sikkim ff PATTI CHART LIST
+          KOLKATA FF PATTI CHART LIST
         </h1>
         <p className="text-gray-600 mt-2 text-sm md:text-base">
           Use the comprehensive chart below to find three-digit Patti

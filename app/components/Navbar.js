@@ -6,14 +6,28 @@ import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Tips", path: "/tips" },
     { name: "Lucky Number", path: "/luckynumber" },
-    { name: "Patti", path: "/Sikkim-ff-patti-list-chart-complete-full" },
+    { name: "Patti Chart", path: "/Sikkim-ff-patti-list-chart-complete-full" },
   ];
+
+  // Track scroll position to enhance navbar styling on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -23,7 +37,6 @@ export default function Navbar() {
   // Prevent body scrolling when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -34,156 +47,103 @@ export default function Navbar() {
       {/* =====================================================
           DESKTOP / MAIN NAVBAR
       ====================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-3 sm:px-8 transition-all duration-300 ">
         <nav
-          className="
-            w-full
-            border-b
-            border-yellow-500
-            bg-yellow-400
-            shadow-[0_10px_40px_rgba(0,0,0,0.20)]
-          "
+          className={`mx-auto max-w-7xl rounded-2xl transition-all duration-300 ${
+            scrolled
+              ? "border border-amber-500/30 bg-slate-950/80 shadow-2xl backdrop-blur-xl"
+              : "border border-slate-800 bg-slate-900/90 shadow-xl backdrop-blur-md"
+          }`}
         >
-          <div className="flex min-h-[64px] items-center justify-between px-4 sm:px-6">
+          <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+            
             {/* ================= LOGO ================= */}
-            <Link href="/" className="group flex min-w-0 items-center gap-2">
-              {/* Logo Icon */}
-              <div
-                className="
-                  flex
-                  h-10
-                  w-10
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-xl
-                 
-                
-                  group-hover:scale-105
-                "
-              >
-                <img src="/images/sikkimff.png" alt="Sikkim FF" />
+            <Link href="/" className="group flex items-center gap-3">
+              {/* Logo Icon Container */}
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-0.5 shadow-lg shadow-amber-500/20 transition-transform duration-300 group-hover:scale-105">
+                <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-slate-950">
+                  <img
+                    src="/images/sikkimff.png"
+                    alt="Sikkim FF"
+                    className="h-7 w-7 object-contain"
+                  />
+                </div>
               </div>
 
               {/* Logo Text */}
-              <div className="hidden xs:block sm:block">
-                <h1
-                  className="
-                    text-sm
-                    font-extrabold
-                    tracking-wide
-                    text-black
-                    sm:text-base
-                  "
-                >
-                  Fast Result
-                </h1>
-
-                <p
-                  className="
-                    text-[10px]
-                    font-bold
-                    uppercase
-                    tracking-widest
-                    text-purple-800
-                  "
-                >
+              <div className="flex flex-col">
+                <span className="text-base font-black tracking-wide text-white transition-colors group-hover:text-amber-400 sm:text-lg">
+                  FAST <span className="text-amber-400">RESULT</span>
+                </span>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
                   Result & Tips
-                </p>
+                </span>
               </div>
             </Link>
 
             {/* ================= DESKTOP MENU ================= */}
-            <div className="hidden items-center gap-1 md:flex">
+            <div className="hidden items-center gap-1.5 md:flex">
               {navItems.map((item) => {
                 const isActive =
                   item.path === "/"
                     ? pathname === "/"
-                    : pathname === item.path ||
-                      pathname.startsWith(`${item.path}/`);
+                    : pathname === item.path || pathname.startsWith(`${item.path}/`);
 
                 return (
                   <Link
                     key={item.path}
                     href={item.path}
-                    className={`
-                      relative
-                      rounded-xl
-                      px-4
-                      py-2.5
-                      text-sm
-                      font-bold
-                      transition-all
-                      duration-300
-                      ${
-                        isActive
-                          ? `
-                            bg-gradient-to-r
-                            from-violet-600
-                            to-blue-600
-                            text-white
-                            shadow-lg
-                            shadow-violet-700/30
-                          `
-                          : `
-                            text-black
-                            hover:bg-black/10
-                            hover:text-black
-                          `
-                      }
-                    `}
+                    className={`relative rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
+                      isActive
+                        ? "text-slate-950"
+                        : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
+                    }`}
                   >
-                    {item.name}
-
-                    {/* Active Indicator */}
+                    {/* Active Background Pill */}
                     {isActive && (
-                      <span
-                        className="
-                          absolute
-                          -bottom-[1px]
-                          left-1/2
-                          h-[2px]
-                          w-5
-                          -translate-x-1/2
-                          rounded-full
-                          bg-white
-                        "
-                      />
+                      <span className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md shadow-amber-500/20" />
                     )}
+                    {item.name}
                   </Link>
                 );
               })}
             </div>
 
-            {/* ================= MOBILE BUTTON ================= */}
-            <button
-              type="button"
-              aria-label="Open menu"
-              aria-expanded={open}
-              onClick={() => setOpen(true)}
-              className="
-                flex
-                h-11
-                w-11
-                items-center
-                justify-center
-                rounded-xl
-                border
-                border-black/10
-                bg-black/5
-                text-black
-                transition
-                duration-300
-                hover:bg-black/10
-                md:hidden
-              "
-            >
-              <div className="flex w-5 flex-col gap-1.5">
-                <span className="h-0.5 w-full rounded-full bg-black" />
-                <span className="h-0.5 w-4/5 rounded-full bg-purple-700" />
-                <span className="h-0.5 w-full rounded-full bg-black" />
+            {/* ================= RIGHT ACTION / MOBILE TOGGLE ================= */}
+            <div className="flex items-center gap-3">
+              {/* Live Badge (Desktop) */}
+              <div className="hidden items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 lg:flex">
+                <span className="h-2 w-2 animate-ping rounded-full bg-emerald-400" />
+                Live Updates
               </div>
-            </button>
+
+              {/* Mobile Hamburger Button */}
+              <button
+                type="button"
+                aria-label="Toggle menu"
+                aria-expanded={open}
+                onClick={() => setOpen(!open)}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/50 text-slate-200 transition-colors hover:bg-slate-800 hover:text-white md:hidden"
+              >
+                <div className="flex w-5 flex-col items-center justify-center gap-1.5">
+                  <span
+                    className={`h-0.5 w-full rounded-full bg-current transition-all duration-300 ${
+                      open ? "translate-y-2 rotate-45 bg-amber-400" : ""
+                    }`}
+                  />
+                  <span
+                    className={`h-0.5 w-full rounded-full bg-amber-400 transition-all duration-300 ${
+                      open ? "opacity-0" : ""
+                    }`}
+                  />
+                  <span
+                    className={`h-0.5 w-full rounded-full bg-current transition-all duration-300 ${
+                      open ? "-translate-y-2 -rotate-45 bg-amber-400" : ""
+                    }`}
+                  />
+                </div>
+              </button>
+            </div>
           </div>
         </nav>
       </header>
@@ -192,21 +152,9 @@ export default function Navbar() {
           MOBILE OVERLAY
       ====================================================== */}
       <div
-        className={`
-          fixed
-          inset-0
-          z-[110]
-          bg-black/60
-          backdrop-blur-sm
-          transition-all
-          duration-300
-          md:hidden
-          ${
-            open
-              ? "pointer-events-auto opacity-100"
-              : "pointer-events-none opacity-0"
-          }
-        `}
+        className={`fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
         onClick={() => setOpen(false)}
       />
 
@@ -214,233 +162,78 @@ export default function Navbar() {
           MOBILE DRAWER
       ====================================================== */}
       <aside
-        className={`
-          fixed
-          right-0
-          top-0
-          z-[120]
-          flex
-          h-full
-          w-[82%]
-          max-w-[360px]
-          flex-col
-          border-l
-          border-white/10
-          bg-[#080c18]/95
-          shadow-[-20px_0_60px_rgba(0,0,0,0.5)]
-          backdrop-blur-2xl
-          transition-transform
-          duration-300
-          ease-out
-          md:hidden
-          ${open ? "translate-x-0" : "translate-x-full"}
-        `}
+        className={`fixed right-0 top-0 z-[120] flex h-full w-[85%] max-w-[340px] flex-col border-l border-slate-800 bg-slate-950 p-6 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
       >
-        {/* Decorative Glow */}
-        <div
-          className="
-            pointer-events-none
-            absolute
-            -right-20
-            -top-20
-            h-48
-            w-48
-            rounded-full
-            bg-violet-600/20
-            blur-3xl
-          "
-        />
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            -bottom-20
-            -left-20
-            h-48
-            w-48
-            rounded-full
-            bg-blue-600/20
-            blur-3xl
-          "
-        />
+        {/* Background Decorative Glow */}
+        <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-amber-500/10 blur-3xl" />
 
         {/* ================= MOBILE HEADER ================= */}
-        <div
-          className="
-            relative
-            flex
-            items-center
-            justify-between
-            border-b
-            border-white/10
-            px-5
-            py-5
-          "
-        >
+        <div className="flex items-center justify-between border-b border-slate-800/80 pb-5">
           <Link
             href="/"
             onClick={() => setOpen(false)}
             className="flex items-center gap-3"
           >
-            {/* Mobile Logo */}
-            <div
-              className="
-                flex
-                h-10
-                w-10
-                items-center
-                justify-center
-                rounded-xl
-                bg-gradient-to-br
-                from-violet-600
-                to-blue-600
-                shadow-lg
-                shadow-violet-500/20
-              "
-            >
-              <span className="font-black text-white">K</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-400 font-black text-slate-950">
+              S
             </div>
-
             <div>
-              <h2 className="text-sm font-bold text-white">Sikkim Fast</h2>
-
-              <p
-                className="
-                  text-[10px]
-                  font-bold
-                  uppercase
-                  tracking-widest
-                  text-purple-300
-                "
-              >
+              <h2 className="text-base font-bold text-white">Sikkim Fast</h2>
+              <p className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider">
                 Result & Tips
               </p>
             </div>
           </Link>
 
-          {/* ================= CLOSE BUTTON ================= */}
           <button
             type="button"
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="
-              flex
-              h-10
-              w-10
-              items-center
-              justify-center
-              rounded-xl
-              border
-              border-white/10
-              bg-white/5
-              text-xl
-              text-white
-              transition
-              hover:bg-red-500/10
-              hover:text-red-400
-            "
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
           >
-            ×
+            ✕
           </button>
         </div>
 
-        {/* ================= MOBILE NAV ================= */}
-        <div className="relative flex flex-1 flex-col px-5 py-7">
-          <p
-            className="
-              mb-4
-              px-2
-              text-[11px]
-              font-bold
-              uppercase
-              tracking-[0.2em]
-              text-slate-400
-            "
-          >
-            Navigation
-          </p>
-
+        {/* ================= MOBILE NAV LINKS ================= */}
+        <div className="flex flex-1 flex-col justify-between py-6">
           <div className="flex flex-col gap-2">
+            <span className="mb-2 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+              Navigation Menu
+            </span>
             {navItems.map((item, index) => {
               const isActive =
                 item.path === "/"
                   ? pathname === "/"
-                  : pathname === item.path ||
-                    pathname.startsWith(`${item.path}/`);
+                  : pathname === item.path || pathname.startsWith(`${item.path}/`);
 
               return (
                 <Link
                   key={item.path}
                   href={item.path}
                   onClick={() => setOpen(false)}
-                  className={`
-                    group
-                    flex
-                    items-center
-                    gap-4
-                    rounded-2xl
-                    px-4
-                    py-4
-                    transition-all
-                    duration-300
-                    ${
-                      isActive
-                        ? `
-                          bg-gradient-to-r
-                          from-violet-600/90
-                          to-blue-600/80
-                          text-white
-                          shadow-lg
-                          shadow-violet-500/20
-                        `
-                        : `
-                          text-white
-                          hover:bg-white/5
-                          hover:text-white
-                        `
-                    }
-                  `}
+                  className={`group flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-semibold transition-all duration-200 ${
+                    isActive
+                      ? "bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-lg shadow-amber-500/10"
+                      : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                  }`}
                 >
-                  {/* Number */}
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`text-xs font-mono font-bold ${
+                        isActive ? "text-slate-900" : "text-slate-500"
+                      }`}
+                    >
+                      0{index + 1}
+                    </span>
+                    <span>{item.name}</span>
+                  </div>
                   <span
-                    className={`
-                      flex
-                      h-8
-                      w-8
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-lg
-                      text-xs
-                      font-bold
-                      ${
-                        isActive
-                          ? "bg-white/15 text-white"
-                          : "bg-white/5 text-slate-300 group-hover:text-purple-300"
-                      }
-                    `}
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-
-                  {/* Name */}
-                  <span className="flex-1 text-sm font-semibold">
-                    {item.name}
-                  </span>
-
-                  {/* Arrow */}
-                  <span
-                    className={`
-                      text-lg
-                      transition-transform
-                      duration-300
-                      ${
-                        isActive
-                          ? "translate-x-0 text-white"
-                          : "-translate-x-1 text-slate-400 group-hover:translate-x-0 group-hover:text-purple-300"
-                      }
-                    `}
+                    className={`transition-transform duration-200 group-hover:translate-x-1 ${
+                      isActive ? "text-slate-900" : "text-slate-600"
+                    }`}
                   >
                     →
                   </span>
@@ -449,46 +242,17 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* ================= BOTTOM CARD ================= */}
-          <div className="mt-auto pt-8">
-            <div
-              className="
-                overflow-hidden
-                rounded-2xl
-                border
-                border-violet-500/20
-                bg-gradient-to-br
-                from-violet-500/10
-                to-blue-500/10
-                p-5
-              "
-            >
-              <div className="mb-2 flex items-center gap-2">
-                <span
-                  className="
-                    h-2
-                    w-2
-                    animate-pulse
-                    rounded-full
-                    bg-green-400
-                  "
-                />
-
-                <span className="text-xs font-semibold text-green-300">
-                  Live Updates
-                </span>
-              </div>
-
-              <p
-                className="
-                  text-xs
-                  leading-relaxed
-                  text-slate-300
-                "
-              >
-                Check the latest Sikkim Fast results, tips and lucky numbers.
-              </p>
+          {/* ================= MOBILE BOTTOM CARD ================= */}
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-bold text-emerald-400">
+                Live Updates Active
+              </span>
             </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Get fast real-time results, daily tips, and chart updates directly on your device.
+            </p>
           </div>
         </div>
       </aside>

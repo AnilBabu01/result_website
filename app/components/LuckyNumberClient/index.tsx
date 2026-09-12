@@ -70,7 +70,7 @@ export default function LuckyWheel() {
 
       <div className="min-h-screen px-3 py-6 text-white flex flex-col items-center">
         <h1 className="text-2xl font-bold text-yellow-400">
-          sikkim ff LUCKY NUMBER
+          KOLKATA FF LUCKY NUMBER
         </h1>
 
         <div className="relative flex flex-col items-center mt-6 bg-white/5 backdrop-blur-lg border border-yellow-500/20 rounded-xl py-6 w-full max-w-md">
