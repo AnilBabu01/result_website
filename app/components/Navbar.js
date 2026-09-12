@@ -47,12 +47,12 @@ export default function Navbar() {
       {/* =====================================================
           DESKTOP / MAIN NAVBAR
       ====================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-3 sm:px-8 transition-all duration-300 ">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-3 sm:px-8 transition-all duration-300">
         <nav
           className={`mx-auto max-w-7xl rounded-2xl transition-all duration-300 ${
             scrolled
-              ? "border border-amber-500/30 bg-slate-950/80 shadow-2xl backdrop-blur-xl"
-              : "border border-slate-800 bg-slate-900/90 shadow-xl backdrop-blur-md"
+              ? "border border-amber-500/30 bg-white/80 shadow-lg shadow-slate-200/50 backdrop-blur-xl"
+              : "border border-slate-200 bg-white/90 shadow-md backdrop-blur-md"
           }`}
         >
           <div className="flex h-16 items-center justify-between px-4 sm:px-6">
@@ -60,8 +60,8 @@ export default function Navbar() {
             {/* ================= LOGO ================= */}
             <Link href="/" className="group flex items-center gap-3">
               {/* Logo Icon Container */}
-              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-0.5 shadow-lg shadow-amber-500/20 transition-transform duration-300 group-hover:scale-105">
-                <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-slate-950">
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-0.5 shadow-md shadow-amber-500/20 transition-transform duration-300 group-hover:scale-105">
+                <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-white">
                   <img
                     src="/images/sikkimff.png"
                     alt="Sikkim FF"
@@ -72,10 +72,10 @@ export default function Navbar() {
 
               {/* Logo Text */}
               <div className="flex flex-col">
-                <span className="text-base font-black tracking-wide text-white transition-colors group-hover:text-amber-400 sm:text-lg">
-                  Sikkim <span className="text-amber-400">RESULT</span>
+                <span className="text-base font-black tracking-wide text-slate-900 transition-colors group-hover:text-amber-600 sm:text-lg">
+                  Sikkim <span className="text-amber-500">RESULT</span>
                 </span>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
                   Result & Tips
                 </span>
               </div>
@@ -96,12 +96,12 @@ export default function Navbar() {
                     className={`relative rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 ${
                       isActive
                         ? "text-slate-950"
-                        : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                     }`}
                   >
                     {/* Active Background Pill */}
                     {isActive && (
-                      <span className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md shadow-amber-500/20" />
+                      <span className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-sm shadow-amber-500/20" />
                     )}
                     {item.name}
                   </Link>
@@ -112,8 +112,8 @@ export default function Navbar() {
             {/* ================= RIGHT ACTION / MOBILE TOGGLE ================= */}
             <div className="flex items-center gap-3">
               {/* Live Badge (Desktop) */}
-              <div className="hidden items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 lg:flex">
-                <span className="h-2 w-2 animate-ping rounded-full bg-emerald-400" />
+              <div className="hidden items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 lg:flex">
+                <span className="h-2 w-2 animate-ping rounded-full bg-emerald-500" />
                 Live Updates
               </div>
 
@@ -123,22 +123,22 @@ export default function Navbar() {
                 aria-label="Toggle menu"
                 aria-expanded={open}
                 onClick={() => setOpen(!open)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/50 text-slate-200 transition-colors hover:bg-slate-800 hover:text-white md:hidden"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 md:hidden"
               >
                 <div className="flex w-5 flex-col items-center justify-center gap-1.5">
                   <span
                     className={`h-0.5 w-full rounded-full bg-current transition-all duration-300 ${
-                      open ? "translate-y-2 rotate-45 bg-amber-400" : ""
+                      open ? "translate-y-2 rotate-45 text-amber-500" : ""
                     }`}
                   />
                   <span
-                    className={`h-0.5 w-full rounded-full bg-amber-400 transition-all duration-300 ${
+                    className={`h-0.5 w-full rounded-full bg-amber-500 transition-all duration-300 ${
                       open ? "opacity-0" : ""
                     }`}
                   />
                   <span
                     className={`h-0.5 w-full rounded-full bg-current transition-all duration-300 ${
-                      open ? "-translate-y-2 -rotate-45 bg-amber-400" : ""
+                      open ? "-translate-y-2 -rotate-45 text-amber-500" : ""
                     }`}
                   />
                 </div>
@@ -152,7 +152,7 @@ export default function Navbar() {
           MOBILE OVERLAY
       ====================================================== */}
       <div
-        className={`fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-[110] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={() => setOpen(false)}
@@ -162,15 +162,15 @@ export default function Navbar() {
           MOBILE DRAWER
       ====================================================== */}
       <aside
-        className={`fixed right-0 top-0 z-[120] flex h-full w-[85%] max-w-[340px] flex-col border-l border-slate-800 bg-slate-950 p-6 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed right-0 top-0 z-[120] flex h-full w-[85%] max-w-[340px] flex-col border-l border-slate-200 bg-white p-6 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Background Decorative Glow */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-amber-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-amber-400/10 blur-3xl" />
 
         {/* ================= MOBILE HEADER ================= */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-5">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-5">
           <Link
             href="/"
             onClick={() => setOpen(false)}
@@ -180,8 +180,8 @@ export default function Navbar() {
               S
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Sikkim Fast</h2>
-              <p className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider">
+              <h2 className="text-base font-bold text-slate-900">Sikkim Fast</h2>
+              <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">
                 Result & Tips
               </p>
             </div>
@@ -191,7 +191,7 @@ export default function Navbar() {
             type="button"
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800"
           >
             ✕
           </button>
@@ -200,7 +200,7 @@ export default function Navbar() {
         {/* ================= MOBILE NAV LINKS ================= */}
         <div className="flex flex-1 flex-col justify-between py-6">
           <div className="flex flex-col gap-2">
-            <span className="mb-2 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+            <span className="mb-2 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-400">
               Navigation Menu
             </span>
             {navItems.map((item, index) => {
@@ -216,14 +216,14 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className={`group flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-semibold transition-all duration-200 ${
                     isActive
-                      ? "bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-lg shadow-amber-500/10"
-                      : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                      ? "bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/15"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span
                       className={`text-xs font-mono font-bold ${
-                        isActive ? "text-slate-900" : "text-slate-500"
+                        isActive ? "text-slate-900" : "text-slate-400"
                       }`}
                     >
                       0{index + 1}
@@ -232,7 +232,7 @@ export default function Navbar() {
                   </div>
                   <span
                     className={`transition-transform duration-200 group-hover:translate-x-1 ${
-                      isActive ? "text-slate-900" : "text-slate-600"
+                      isActive ? "text-slate-900" : "text-slate-400"
                     }`}
                   >
                     →
@@ -243,14 +243,14 @@ export default function Navbar() {
           </div>
 
           {/* ================= MOBILE BOTTOM CARD ================= */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+          <div className="rounded-2xl border border-slate-200/80 bg-slate-50 p-4">
             <div className="mb-2 flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-bold text-emerald-400">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-bold text-emerald-700">
                 Live Updates Active
               </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-relaxed">
               Get fast real-time results, daily tips, and chart updates directly on your device.
             </p>
           </div>

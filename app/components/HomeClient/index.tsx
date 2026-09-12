@@ -327,60 +327,46 @@ export default function Home() {
   }
 
   /* =======================================================
-     GRID BOARD RENDERER
+     GRID BOARD RENDERER (FULL-SCREEN MOBILE FIXED)
   ======================================================= */
 
   const renderGridBoard = (values: string[], resultsList: string[]) => {
     return (
-      <div className="w-full overflow-x-auto scrollbar-none">
-        <div className="min-w-[550px] w-full border-t border-gray-200">
-          {/* Header Bazi Row */}
-          <div className="grid grid-cols-8 bg-gray-100 text-[11px] font-extrabold text-gray-600 uppercase border-b border-gray-200">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => (
+      <div className="w-full border-t border-gray-300">
+        {/* Values Row (Patti/Last No) */}
+        <div className="grid grid-cols-8 w-full bg-white border-b border-gray-300">
+          {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+            const val = values[i] || "-";
+            const isOff = val === "OFF";
+            return (
               <div
-                key={`bazi-${i}`}
-                className="py-1.5 text-center border-r last:border-r-0 border-gray-200"
+                key={`val-${i}`}
+                className={`py-2 px-0.5 text-center text-[10px] sm:text-xs font-bold border-r last:border-r-0 border-gray-300 ${
+                  isOff ? "text-red-600 font-extrabold" : "text-gray-900"
+                }`}
               >
-                {i + 1} Bazi
+                {val}
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Values Row (Patti/Last No) */}
-          <div className="grid grid-cols-8 bg-white border-b border-gray-200">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-              const val = values[i] || "-";
-              const isOff = val === "OFF";
-              return (
-                <div
-                  key={`val-${i}`}
-                  className={`py-2 text-center text-xs sm:text-sm font-bold border-r last:border-r-0 border-gray-200 ${
-                    isOff ? "text-red-600 font-extrabold" : "text-amber-600"
-                  }`}
-                >
-                  {val}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Results Row (Single/First No) */}
-          <div className="grid grid-cols-8 bg-gray-50/50">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-              const res = resultsList[i] || "-";
-              const isOff = res === "OFF";
-              return (
-                <div
-                  key={`res-${i}`}
-                  className={`py-2 text-center text-sm sm:text-base font-black border-r last:border-r-0 border-gray-200 ${
-                    isOff ? "text-red-600" : "text-gray-900"
-                  }`}
-                >
-                  {res}
-                </div>
-              );
-            })}
-          </div>
+        {/* Results Row (Single/First No) */}
+        <div className="grid grid-cols-8 w-full bg-white">
+          {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+            const res = resultsList[i] || "-";
+            const isOff = res === "OFF";
+            return (
+              <div
+                key={`res-${i}`}
+                className={`py-2 px-0.5 text-center text-xs sm:text-sm font-black border-r last:border-r-0 border-gray-300 ${
+                  isOff ? "text-red-600" : "text-gray-900"
+                }`}
+              >
+                {res}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -391,7 +377,7 @@ export default function Home() {
   ======================================================= */
 
   return (
-    <main className="min-h-screen bg-white text-gray-800 font-sans antialiased pb-16">
+    <main className="min-h-screen bg-gray-100 text-gray-800 font-sans antialiased pb-16">
       {/* Top Bar Refresh Notification */}
       {(manualRefreshing || resultFetching) && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-amber-400 text-black px-4 py-2 text-xs font-bold shadow-md flex items-center justify-center gap-2">
@@ -402,7 +388,7 @@ export default function Home() {
 
       {/* Navigation Header */}
       <header className="border-b border-gray-200 bg-white sticky top-0 z-40 shadow-sm">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center text-black font-black text-sm">
               FF
@@ -426,23 +412,23 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 pt-6 flex flex-col items-center">
+      <div className="max-w-md mx-auto px-3 pt-4 flex flex-col items-center">
         {/* =================================================
             LIVE / TODAY RESULT CARD
         ================================================= */}
-        <section className="w-full bg-white border border-gray-300 rounded-2xl overflow-hidden shadow-sm mb-4">
+        <section className="w-full bg-white border border-gray-300 rounded-xl overflow-hidden shadow-sm mb-4">
           {/* Card Banner */}
-          <div className="bg-amber-400 border-b border-amber-500 px-4 py-3 flex items-center justify-between">
+          <div className="bg-amber-400 border-b border-amber-500 px-3 py-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
               </span>
-              <span className="text-xs font-black uppercase tracking-wider text-black">
+              <span className="text-[11px] font-black uppercase tracking-wider text-black">
                 Live Result Today
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-bold text-black">
+            <div className="flex items-center gap-1 text-[11px] font-bold text-black">
               <FaCalendarAlt />
               <span>{date || "LOADING DATE..."}</span>
             </div>
@@ -456,7 +442,7 @@ export default function Home() {
 
           {/* OFF Notice if no records */}
           {!hasTodayResult && (
-            <div className="text-center py-2.5 bg-red-50 border-t border-red-200 text-red-600 font-bold text-xs uppercase tracking-wider">
+            <div className="text-center py-2 bg-red-50 border-t border-red-200 text-red-600 font-bold text-[11px] uppercase tracking-wider">
               Today's Bazi is Currently OFF
             </div>
           )}
@@ -466,7 +452,7 @@ export default function Home() {
         <button
           onClick={handleRefresh}
           disabled={manualRefreshing || resultFetching}
-          className="w-full bg-amber-400 hover:bg-amber-300 text-black font-black text-sm py-3 px-4 rounded-xl shadow-sm border border-amber-500 flex items-center justify-center gap-2 mb-6 active:scale-[0.99] transition disabled:opacity-50 cursor-pointer"
+          className="w-full bg-amber-400 hover:bg-amber-300 text-black font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-sm border border-amber-500 flex items-center justify-center gap-2 mb-6 active:scale-[0.99] transition disabled:opacity-50 cursor-pointer"
         >
           <FaSyncAlt
             className={manualRefreshing || resultFetching ? "animate-spin" : ""}
@@ -481,7 +467,7 @@ export default function Home() {
         {/* =================================================
             CTA LINKS
         ================================================= */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+        <div className="w-full space-y-2.5 mb-8">
           {apkUrl !== "#" && (
             <a
               href={apkUrl}
@@ -490,11 +476,11 @@ export default function Home() {
               className="bg-red-600 hover:bg-red-700 text-white rounded-xl p-3 flex items-center justify-between shadow-sm border border-red-700 transition group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white text-base">
+                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-sm">
                   <FaDownload />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-red-100 tracking-wider">
+                  <div className="text-[9px] uppercase font-bold text-red-100 tracking-wider">
                     Official App
                   </div>
                   <div className="text-xs font-black">Download APK</div>
@@ -512,11 +498,11 @@ export default function Home() {
               className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl p-3 flex items-center justify-between shadow-sm border border-emerald-700 transition group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white text-lg">
+                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-base">
                   <FaWhatsapp />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-emerald-100 tracking-wider">
+                  <div className="text-[9px] uppercase font-bold text-emerald-100 tracking-wider">
                     Community
                   </div>
                   <div className="text-xs font-black">WhatsApp Group</div>
@@ -534,11 +520,11 @@ export default function Home() {
               className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl p-3 flex items-center justify-between shadow-sm border border-sky-600 transition group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white text-lg">
+                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-base">
                   <FaTelegramPlane />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-sky-100 tracking-wider">
+                  <div className="text-[9px] uppercase font-bold text-sky-100 tracking-wider">
                     Channel
                   </div>
                   <div className="text-xs font-black">Telegram Join</div>
@@ -554,26 +540,23 @@ export default function Home() {
         ================================================= */}
         <div className="w-full mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-px bg-gray-200 flex-1" />
-            <h2 className="text-xs font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+            <div className="h-px bg-gray-300 flex-1" />
+            <h2 className="text-xs font-black text-gray-700 uppercase tracking-widest flex items-center gap-1.5">
               <FaCalendarAlt className="text-amber-500" />
               Old Results History
             </h2>
-            <div className="h-px bg-gray-200 flex-1" />
+            <div className="h-px bg-gray-300 flex-1" />
           </div>
 
-          <div className="w-full space-y-3">
+          <div className="w-full space-y-4">
             {historyData.slice(0, visibleHistoryCount).map((history) => (
               <div
                 key={history.date}
-                className="w-full bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm"
+                className="w-full bg-white rounded-xl border border-gray-300 overflow-hidden shadow-sm"
               >
-                <div className="bg-amber-400 px-4 py-2 text-center border-b border-amber-500 flex items-center justify-between">
+                <div className="bg-amber-400 px-3 py-2 text-center border-b border-amber-500 flex items-center justify-center">
                   <span className="text-xs font-black text-black uppercase tracking-wider">
                     DATE: {history.date}
-                  </span>
-                  <span className="text-[10px] text-gray-800 font-bold uppercase">
-                    8 Bazi Chart
                   </span>
                 </div>
                 {renderGridBoard(history.values, history.results)}
@@ -585,7 +568,7 @@ export default function Home() {
           {visibleHistoryCount < historyData.length && (
             <button
               onClick={() => setVisibleHistoryCount((prev) => prev + 5)}
-              className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 font-bold text-xs py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 active:scale-98"
+              className="mt-4 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300 font-bold text-xs py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 active:scale-98"
             >
               <span>Load More Results</span>
               <FaChevronDown className="text-amber-600" />
@@ -596,9 +579,9 @@ export default function Home() {
         {/* =================================================
             INFORMATION & SEO SECTION
         ================================================= */}
-        <section className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-5 space-y-5 text-gray-600 text-xs sm:text-sm leading-relaxed">
+        <section className="w-full bg-white border border-gray-300 rounded-xl p-4 space-y-4 text-gray-600 text-xs leading-relaxed">
           <div>
-            <h3 className="text-gray-900 font-extrabold text-base mb-2 flex items-center gap-2">
+            <h3 className="text-gray-900 font-extrabold text-sm mb-1 flex items-center gap-2">
               <FaInfoCircle className="text-amber-500" />
               What is Sikkim FF?
             </h3>
@@ -607,23 +590,23 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="grid grid-cols-1 gap-3 pt-1">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
               <h4 className="text-gray-900 font-bold mb-1 flex items-center gap-2">
                 <FaShieldAlt className="text-emerald-600" />
                 Live Result Timings
               </h4>
-              <p className="text-xs text-gray-500">
+              <p className="text-[11px] text-gray-500">
                 The game operates 8 times daily from morning to evening. Live results are updated automatically on this portal.
               </p>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
               <h4 className="text-gray-900 font-bold mb-1 flex items-center gap-2">
                 <FaLightbulb className="text-amber-500" />
                 Free Number Tips Notice
               </h4>
-              <p className="text-xs text-gray-500">
+              <p className="text-[11px] text-gray-500">
                 This game relies entirely on luck and random draws. Avoid fraudulent channels on social media claiming fixed numbers.
               </p>
             </div>
