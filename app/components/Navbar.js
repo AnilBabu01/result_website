@@ -62,7 +62,7 @@ export default function Navbar() {
                   group-hover:scale-105
                 "
               >
-                <img src="/images/kolkataff.png" alt="Kolkata FF" />
+                <img src="/images/sikkimff.png" alt="Kolkata FF" />
               </div>
 
               {/* Logo Text */}

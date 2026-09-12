@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live KOLKATA FF Result Updates for ${today}. Check the Kolkata Fatafat Result (कोलकाता फटाफट रिजल्ट), updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
 
   return {
-    metadataBase: new URL("https://kolkataff.tech"),
+    metadataBase: new URL("https://sikkimff.tech"),
 
     title: {
       default: title,
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
 
     alternates: {
-      canonical: "https://kolkataff.tech/",
+      canonical: "https://sikkimff.tech/",
     },
 
     robots: {
@@ -77,7 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       title,
       description,
-      url: "https://kolkataff.tech/",
+      url: "https://sikkimff.tech/",
       siteName: "Kolkata Fatafat",
       locale: "en_IN",
 

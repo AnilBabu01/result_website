@@ -987,7 +987,7 @@ export default function Home() {
           On the home page of this portal, you will find a
           large previous record table of the results. In
           this table, you will become able to find out
-          KolkataFF Old Results of previous days.
+          sikkimff Old Results of previous days.
         </p>
 
         <p className="text-black font-bold text-[20px]">
