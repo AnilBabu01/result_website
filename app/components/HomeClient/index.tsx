@@ -896,14 +896,14 @@ export default function Home() {
       <div className="p-4">
 
         <p className="text-black font-bold text-3xl">
-          what is kolkata ff ?
+          what is sikkim ff ?
         </p>
 
         <p>
-          kolkata ff sabse pahle This is the kolkata
+          sikkim ff sabse pahle This is the kolkata
           photo fort official ⭐⭐⭐ No# 1✅✅✅
           website🌏 for all Kolkata people who want to
-          get fast kolkata ff fatafat result. Here you
+          get fast sikkim ff fatafat result. Here you
           can see all today and previous all old and new
           results online free. This is the main page
           where you can get today result and past
@@ -915,7 +915,7 @@ export default function Home() {
         </p>
 
         <p>
-          Kolkata Fatafat Today Result ❤️ Kolkata FF
+          Kolkata Fatafat Today Result ❤️ sikkim ff
           Result Sabse Pahle Yahi Par Aata Hai ❤️
           কলকাতা ফতাফত ❤️ कोलकाता Fatafat Chart Dekho ❤️
           Patti Aur Single Ke Sath Chart 2020-21 ❤️
@@ -923,7 +923,7 @@ export default function Home() {
         </p>
 
         <p>
-          kolkata fatafat result kolkata ff result Satta
+          kolkata fatafat result sikkim ff result Satta
           game is the greatest and most playing game
           everywhere on the country. Not just single
           persons of West Bengal play the game yet
@@ -938,7 +938,7 @@ export default function Home() {
           Assuming you become successful to figure the
           right number, it implies you have won a major
           measure of cash. On the off chance that not, you
-          have lost all the cash. We just give Kolkata FF
+          have lost all the cash. We just give sikkim ff
           Fatafat Result on this entryway.
         </p>
 
@@ -949,11 +949,11 @@ export default function Home() {
           individual who has put away their cash will get
           inquisitive about their outcome. So they look for
           their outcome. What’s more and this entryway is
-          the best one for your Kolkata FF Fun Result.
+          the best one for your sikkim ff Fun Result.
         </p>
 
         <p className="text-black font-bold text-[20px]">
-          Kolkata FF Tips for free
+          sikkim ff Tips for free
         </p>
 
         <p>
@@ -968,7 +968,7 @@ export default function Home() {
         </p>
 
         <p className="text-black font-bold text-[20px]">
-          How to find Kolkata FF Today Result
+          How to find sikkim ff Today Result
         </p>
 
         <p>
@@ -980,7 +980,7 @@ export default function Home() {
         </p>
 
         <p className="text-black font-bold text-[20px]">
-          Kolkata FF Old Result
+          sikkim ff Old Result
         </p>
 
         <p>
@@ -991,7 +991,7 @@ export default function Home() {
         </p>
 
         <p className="text-black font-bold text-[20px]">
-          Kolkata FF Online Result
+          sikkim ff Online Result
         </p>
 
         <p>
@@ -1013,7 +1013,7 @@ export default function Home() {
         </p>
 
         <p className="text-black font-bold text-[20px]">
-          kolkata ff fatafat result Today Live Khel Result
+          sikkim ff fatafat result Today Live Khel Result
         </p>
 
         <p>

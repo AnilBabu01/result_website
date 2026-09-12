@@ -867,11 +867,11 @@ export default function TipsPage() {
         <div className="mt-6 bg-white/5 backdrop-blur-lg border border-yellow-500/20 p-5 rounded-xl leading-7 text-gray-300">
 
           <h2 className="text-yellow-400 font-bold text-lg mb-2">
-            Kolkata FF Tips & Guide
+            sikkim ff Tips & Guide
           </h2>
 
           <p>
-            Kolkata FF is a
+            sikkim ff is a
             number-based guessing
             game. We provide daily
             tips based on analysis

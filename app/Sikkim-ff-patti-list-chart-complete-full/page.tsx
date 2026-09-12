@@ -3,18 +3,18 @@ import LiveBar from "../components/LiveBar";
 import HomeClient from "../components/PattiClient/index";
 
 export const metadata = {
-  title: "Kolkata FF Result Today Live",
+  title: "sikkim ff Result Today Live",
   description:
-    "Live Kolkata FF Results Today. Check fastest updates, tips, lucky numbers and old results.",
+    "Live sikkim ff Results Today. Check fastest updates, tips, lucky numbers and old results.",
 };
 
 export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Kolkata FF Result Today",
+    name: "sikkim ff Result Today",
     url: "https://sikkimff.cloud",
-    description: "Live Kolkata FF Results and Tips",
+    description: "Live sikkim ff Results and Tips",
   };
 
   return (

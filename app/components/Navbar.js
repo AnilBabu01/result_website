@@ -12,7 +12,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Tips", path: "/tips" },
     { name: "Lucky Number", path: "/luckynumber" },
-    { name: "Patti", path: "/kolkata-ff-patti-list-chart-complete-full" },
+    { name: "Patti", path: "/Sikkim-ff-patti-list-chart-complete-full" },
   ];
 
   // Close mobile menu when route changes
@@ -62,7 +62,7 @@ export default function Navbar() {
                   group-hover:scale-105
                 "
               >
-                <img src="/images/sikkimff.png" alt="Kolkata FF" />
+                <img src="/images/sikkimff.png" alt="Sikkim FF" />
               </div>
 
               {/* Logo Text */}
@@ -303,7 +303,7 @@ export default function Navbar() {
             </div>
 
             <div>
-              <h2 className="text-sm font-bold text-white">Kolkata Fast</h2>
+              <h2 className="text-sm font-bold text-white">Sikkim Fast</h2>
 
               <p
                 className="
@@ -486,7 +486,7 @@ export default function Navbar() {
                   text-slate-300
                 "
               >
-                Check the latest Kolkata Fast results, tips and lucky numbers.
+                Check the latest Sikkim Fast results, tips and lucky numbers.
               </p>
             </div>
           </div>

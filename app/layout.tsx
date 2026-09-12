@@ -26,39 +26,39 @@ export async function generateMetadata(): Promise<Metadata> {
   const today = getTodayDate();
   const todayISO = getTodayISO();
 
-  const title = `Kolkata Fatafat FF Result Today | Live Kolkata FF Results & Tips`;
+  const title = `Sikkim Fatafat FF Result Today | Live Sikkim FF Results & Tips`;
 
-  const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live KOLKATA FF Result Updates for ${today}. Check the Kolkata Fatafat Result (कोलकाता फटाफट रिजल्ट), updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
+  const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live Sikkim FF Result Updates for ${today}. Check the Sikkim Fatafat Result (कोलकाता फटाफट रिजल्ट), updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
 
   return {
-    metadataBase: new URL("https://sikkimff.tech"),
+    metadataBase: new URL("https://sikkimff.in"),
 
     title: {
       default: title,
-      template: "%s | Kolkata Fatafat",
+      template: "%s | Sikkim Fatafat",
     },
 
     description,
 
     keywords: [
-      "Kolkata FF",
-      "Kolkata Fatafat",
-      "Kolkata FF result today",
-      "Kolkata Fatafat result",
-      "Kolkata FF old result",
-      "Kolkata FF tips",
-      "Kolkata FF patti list",
-      "Kolkata FF bazi chart",
-      "Kolkata fatafat chart",
+      "Sikkim FF",
+      "Sikkim Fatafat",
+      "Sikkim FF result today",
+      "Sikkim Fatafat result",
+      "Sikkim FF old result",
+      "Sikkim FF tips",
+      "Sikkim FF patti list",
+      "Sikkim FF bazi chart",
+      "Sikkim fatafat chart",
       "8 Bazi Tips",
       "Ghosh Babu Tips",
       "Live Result",
       "Patti Chart",
-      "Satta Matka Kolkata",
+      "Satta Matka Sikkim",
     ],
 
     alternates: {
-      canonical: "https://sikkimff.tech/",
+      canonical: "https://sikkimff.in/",
     },
 
     robots: {
@@ -77,7 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       title,
       description,
-      url: "https://sikkimff.tech/",
+      url: "https://sikkimff.in/",
       siteName: "Kolkata Fatafat",
       locale: "en_IN",
 
@@ -86,7 +86,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "Kolkata Fatafat FF Result",
+          alt: "Sikkim Fatafat FF Result",
         },
       ],
     },
@@ -95,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description:
-        "Get fastest Kolkata FF results, old charts, daily tips and patti list online.",
+        "Get fastest Sikkim FF results, old charts, daily tips and patti list online.",
       images: ["/og.png"],
     },
 

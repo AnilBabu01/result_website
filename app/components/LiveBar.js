@@ -9,7 +9,7 @@ export default function LiveBar() {
 
       <div className="overflow-hidden w-full">
         <div className="animate-scroll font-bold py-2">
-          | Daily Updated Result Website | Kolkata FF Result Today | Fast Update
+          | Daily Updated Result Website | sikkim ff Result Today | Fast Update
           | Check Now 🔥 |
         </div>
       </div>
