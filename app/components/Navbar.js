@@ -10,10 +10,10 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "Tips", path: "/tips" },
-    { name: "Lucky Number", path: "/luckynumber" },
-    { name: "Patti Chart", path: "/Sikkim-ff-patti-list-chart-complete-full" },
+    // { name: "Home", path: "/" },
+    // { name: "Tips", path: "/tips" },
+    // { name: "Lucky Number", path: "/luckynumber" },
+    // { name: "Patti Chart", path: "/Sikkim-ff-patti-list-chart-complete-full" },
   ];
 
   // Track scroll position to enhance navbar styling on scroll
@@ -73,7 +73,7 @@ export default function Navbar() {
               {/* Logo Text */}
               <div className="flex flex-col">
                 <span className="text-base font-black tracking-wide text-white transition-colors group-hover:text-amber-400 sm:text-lg">
-                  FAST <span className="text-amber-400">RESULT</span>
+                  Sikkim <span className="text-amber-400">RESULT</span>
                 </span>
                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
                   Result & Tips

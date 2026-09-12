@@ -29,7 +29,7 @@ export default function LiveBar() {
           <div className="flex w-max animate-live-scroll items-center py-3 font-bold text-sm text-yellow-100">
 
             <span className="mx-6">
-              Kolkata FF Result Today
+              Sikkim FF Result Today
             </span>
 
             <span className="text-yellow-500">◆</span>
@@ -53,12 +53,12 @@ export default function LiveBar() {
             <span className="text-yellow-500">◆</span>
 
             <span className="mx-6">
-              Kolkata Fatafat Live Update
+              Sikkim Fatafat Live Update
             </span>
 
             {/* Duplicate for seamless loop */}
             <span className="mx-6">
-              Kolkata FF Result Today
+              Sikkim FF Result Today
             </span>
 
             <span className="text-yellow-500">◆</span>
@@ -82,7 +82,7 @@ export default function LiveBar() {
             <span className="text-yellow-500">◆</span>
 
             <span className="mx-6">
-              Kolkata Fatafat Live Update
+              Sikkim Fatafat Live Update
             </span>
           </div>
         </div>
