@@ -11,8 +11,11 @@ import {
   FaInfoCircle,
   FaShieldAlt,
   FaLightbulb,
-  FaCrown,
   FaArrowRight,
+  FaHistory,
+  FaBolt,
+  FaExternalLinkAlt,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 
 import {
@@ -53,7 +56,7 @@ type HistoryDataItem = {
 ========================================================= */
 
 const RESULT_NAME = "bombaybazar FATAFAT";
-const TOTAL_BAZI = 8;
+const TOTAL_BAZI = 12;
 
 /* =========================================================
    DATE HELPERS
@@ -174,12 +177,12 @@ export default function Home() {
       const now = new Date();
       const formattedDate = now.toLocaleDateString("en-GB", {
         day: "numeric",
-        month: "long",
+        month: "short",
         year: "numeric",
       });
 
       const dayName = now.toLocaleDateString("en-US", {
-        weekday: "long",
+        weekday: "short",
       });
 
       setDate(`${dayName.toUpperCase()}, ${formattedDate.toUpperCase()}`);
@@ -282,13 +285,13 @@ export default function Home() {
 
   if (resultLoading) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center text-gray-800">
+      <div className="min-h-screen bg-sky-50 flex flex-col items-center justify-center text-sky-900">
         <div className="relative flex items-center justify-center">
-          <div className="h-14 w-14 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
-          <FaCrown className="absolute text-amber-500 text-base animate-pulse" />
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600" />
+          <FaBolt className="absolute text-sky-600 text-lg animate-pulse" />
         </div>
-        <p className="mt-4 font-bold text-gray-600 tracking-wider text-xs uppercase">
-          Fetching Latest Results...
+        <p className="mt-4 font-bold text-sky-700 tracking-wider text-xs uppercase">
+          Loading Live Data...
         </p>
       </div>
     );
@@ -300,26 +303,26 @@ export default function Home() {
 
   if (resultError) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-4">
-        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center max-w-md w-full shadow-lg">
-          <div className="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-xl mb-4 border border-red-200">
-            ⚠️
+      <div className="min-h-screen bg-sky-50 flex items-center justify-center px-4">
+        <div className="bg-white border border-sky-100 rounded-3xl p-8 text-center max-w-md w-full shadow-xl shadow-sky-100/50">
+          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-4 border border-red-100">
+            <FaExclamationTriangle />
           </div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">
-            Unable to Fetch Data
+          <h2 className="text-xl font-black text-slate-800 mb-1">
+            Connection Lost
           </h2>
-          <p className="text-gray-500 text-xs mb-6">
-            There was a network issue connecting to the live result server.
+          <p className="text-slate-500 text-xs mb-6">
+            Unable to fetch data from the server. Please check your internet connection.
           </p>
           <button
             onClick={handleRefresh}
             disabled={manualRefreshing}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-500 px-6 py-3 font-bold text-black shadow-sm active:scale-95 transition disabled:opacity-60"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 hover:bg-sky-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-sky-500/30 active:scale-95 transition disabled:opacity-60"
           >
             <FaSyncAlt
               className={manualRefreshing ? "animate-spin" : ""}
             />
-            {manualRefreshing ? "Retrying..." : "Try Again"}
+            {manualRefreshing ? "Retrying..." : "Retry Connection"}
           </button>
         </div>
       </div>
@@ -327,46 +330,55 @@ export default function Home() {
   }
 
   /* =======================================================
-     GRID BOARD RENDERER (FULL-SCREEN MOBILE FIXED)
+     GRID BOARD RENDERER (SKY BLUE THEME)
   ======================================================= */
 
   const renderGridBoard = (values: string[], resultsList: string[]) => {
     return (
-      <div className="w-full border-t border-gray-300">
-        {/* Values Row (Patti/Last No) */}
-        <div className="grid grid-cols-8 w-full bg-white border-b border-gray-300">
-          {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-            const val = values[i] || "-";
-            const isOff = val === "OFF";
-            return (
-              <div
-                key={`val-${i}`}
-                className={`py-2 px-0.5 text-center text-[10px] sm:text-xs font-bold border-r last:border-r-0 border-gray-300 ${
-                  isOff ? "text-red-600 font-extrabold" : "text-gray-900"
-                }`}
-              >
-                {val}
-              </div>
-            );
-          })}
-        </div>
+      <div className="w-full overflow-x-auto">
+        <div className="min-w-full">
+          {/* Header Rounds Indicator */}
+          <div className="grid grid-cols-12 bg-sky-100/80 border-b border-sky-200 text-[10px] font-extrabold text-sky-800 text-center py-1">
+            {Array.from({ length: TOTAL_BAZI }, (_, i) => (
+              <div key={`head-${i}`}>{i + 1}</div>
+            ))}
+          </div>
 
-        {/* Results Row (Single/First No) */}
-        <div className="grid grid-cols-8 w-full bg-white">
-          {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-            const res = resultsList[i] || "-";
-            const isOff = res === "OFF";
-            return (
-              <div
-                key={`res-${i}`}
-                className={`py-2 px-0.5 text-center text-xs sm:text-sm font-black border-r last:border-r-0 border-gray-300 ${
-                  isOff ? "text-red-600" : "text-gray-900"
-                }`}
-              >
-                {res}
-              </div>
-            );
-          })}
+          {/* Values Row (Patti/Last No) */}
+          <div className="grid grid-cols-12 w-full bg-white border-b border-sky-100">
+            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+              const val = values[i] || "-";
+              const isOff = val === "OFF";
+              return (
+                <div
+                  key={`val-${i}`}
+                  className={`py-2 px-0.5 text-center text-[10px] sm:text-xs font-semibold border-r last:border-r-0 border-sky-100/60 ${
+                    isOff ? "text-rose-500 font-bold" : "text-slate-600"
+                  }`}
+                >
+                  {val}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Results Row (Single/First No) */}
+          <div className="grid grid-cols-12 w-full bg-sky-50/40">
+            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+              const res = resultsList[i] || "-";
+              const isOff = res === "OFF";
+              return (
+                <div
+                  key={`res-${i}`}
+                  className={`py-2.5 px-0.5 text-center text-xs sm:text-sm font-black border-r last:border-r-0 border-sky-100/60 ${
+                    isOff ? "text-rose-500" : "text-sky-950"
+                  }`}
+                >
+                  {res}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -377,33 +389,38 @@ export default function Home() {
   ======================================================= */
 
   return (
-    <main className="min-h-screen bg-gray-100 text-gray-800 font-sans antialiased pb-16">
+    <main className="min-h-screen bg-slate-50 text-slate-700 font-sans antialiased pb-16">
       {/* Top Bar Refresh Notification */}
       {(manualRefreshing || resultFetching) && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-amber-400 text-black px-4 py-2 text-xs font-bold shadow-md flex items-center justify-center gap-2">
-          <FaSyncAlt className="animate-spin text-black" />
-          <span>Updating results from server...</span>
+        <div className="fixed top-0 left-0 right-0 z-50 bg-sky-600 text-white px-4 py-2 text-xs font-bold shadow-md flex items-center justify-center gap-2 animate-pulse">
+          <FaSyncAlt className="animate-spin text-white" />
+          <span>Syncing real-time updates...</span>
         </div>
       )}
 
-      {/* Navigation Header */}
-      <header className="border-b border-gray-200 bg-white sticky top-0 z-40 shadow-sm">
-        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center text-black font-black text-sm">
-              FF
+      {/* Hero Header */}
+      <header className="bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/10 sticky top-0 z-40">
+        <div className="max-w-md mx-auto px-4 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-black text-sm shadow-inner border border-white/20">
+              <FaBolt className="text-yellow-300" />
             </div>
-            <h1 className="font-black tracking-wider text-gray-900 text-base sm:text-lg">
-              bombaybazar <span className="text-amber-500">FATAFAT</span>
-            </h1>
+            <div>
+              <h1 className="font-black tracking-wide text-white text-base sm:text-lg leading-tight">
+                BOMBAYBAZAR
+              </h1>
+              <span className="text-[10px] font-extrabold tracking-widest text-sky-100 uppercase block -mt-0.5">
+                Fatafat Live
+              </span>
+            </div>
           </div>
           <button
             onClick={handleRefresh}
             disabled={manualRefreshing || resultFetching}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 border border-gray-300 text-xs font-bold text-gray-700 active:scale-95 transition disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-xs font-bold text-white backdrop-blur-md active:scale-95 transition disabled:opacity-50"
           >
             <FaSyncAlt
-              className={`text-amber-600 ${
+              className={`${
                 manualRefreshing || resultFetching ? "animate-spin" : ""
               }`}
             />
@@ -412,25 +429,25 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-md mx-auto px-3 pt-4 flex flex-col items-center">
+      <div className="max-w-md mx-auto px-3.5 pt-4 flex flex-col items-center">
         {/* =================================================
             LIVE / TODAY RESULT CARD
         ================================================= */}
-        <section className="w-full bg-white border border-gray-300 rounded-xl overflow-hidden shadow-sm mb-4">
-          {/* Card Banner */}
-          <div className="bg-amber-400 border-b border-amber-500 px-3 py-2.5 flex items-center justify-between">
+        <section className="w-full bg-white border border-sky-100 rounded-2xl overflow-hidden shadow-xl shadow-sky-500/5 mb-4">
+          {/* Card Banner Header */}
+          <div className="bg-gradient-to-r from-sky-500 to-cyan-500 p-3.5 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 border-2 border-white"></span>
               </span>
-              <span className="text-[11px] font-black uppercase tracking-wider text-black">
-                Live Result Today
+              <span className="text-xs font-black uppercase tracking-wider">
+                Live Today Board
               </span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-black">
-              <FaCalendarAlt />
-              <span>{date || "LOADING DATE..."}</span>
+            <div className="flex items-center gap-1.5 text-[11px] font-bold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
+              <FaCalendarAlt className="text-sky-100" />
+              <span>{date || "LOADING..."}</span>
             </div>
           </div>
 
@@ -442,51 +459,51 @@ export default function Home() {
 
           {/* OFF Notice if no records */}
           {!hasTodayResult && (
-            <div className="text-center py-2 bg-red-50 border-t border-red-200 text-red-600 font-bold text-[11px] uppercase tracking-wider">
-              Today's Bazi is Currently OFF
+            <div className="text-center py-2.5 bg-rose-50 border-t border-rose-100 text-rose-600 font-bold text-[11px] uppercase tracking-wider">
+              Today's Draws are Currently Closed
             </div>
           )}
         </section>
 
-        {/* Action Button: Refresh */}
+        {/* Action Button: Quick Refresh */}
         <button
           onClick={handleRefresh}
           disabled={manualRefreshing || resultFetching}
-          className="w-full bg-amber-400 hover:bg-amber-300 text-black font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-sm border border-amber-500 flex items-center justify-center gap-2 mb-6 active:scale-[0.99] transition disabled:opacity-50 cursor-pointer"
+          className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-2xl shadow-lg shadow-sky-500/25 border border-sky-400 flex items-center justify-center gap-2 mb-5 active:scale-[0.98] transition disabled:opacity-60 cursor-pointer"
         >
           <FaSyncAlt
             className={manualRefreshing || resultFetching ? "animate-spin" : ""}
           />
           <span>
             {manualRefreshing || resultFetching
-              ? "REFRESHING DATA..."
-              : "REFRESH RESULT"}
+              ? "FETCHING LATEST DRAW..."
+              : "REFRESH LIVE BOARD"}
           </span>
         </button>
 
         {/* =================================================
-            CTA LINKS
+            COMMUNITY & DOWNLOAD CTA LINKS
         ================================================= */}
-        <div className="w-full space-y-2.5 mb-8">
+        <div className="w-full grid grid-cols-1 gap-2.5 mb-6">
           {apkUrl !== "#" && (
             <a
               href={apkUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-red-600 hover:bg-red-700 text-white rounded-xl p-3 flex items-center justify-between shadow-sm border border-red-700 transition group"
+              className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-sm">
+                <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center text-white text-base">
                   <FaDownload />
                 </div>
                 <div>
-                  <div className="text-[9px] uppercase font-bold text-red-100 tracking-wider">
-                    Official App
+                  <div className="text-[10px] uppercase font-bold text-indigo-200 tracking-wider">
+                    Official Mobile Application
                   </div>
-                  <div className="text-xs font-black">Download APK</div>
+                  <div className="text-xs font-black">Download Android APK</div>
                 </div>
               </div>
-              <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
+              <FaExternalLinkAlt className="text-xs opacity-70 group-hover:translate-x-0.5 transition" />
             </a>
           )}
 
@@ -495,17 +512,17 @@ export default function Home() {
               href={whatsappGroup}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl p-3 flex items-center justify-between shadow-sm border border-emerald-700 transition group"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-base">
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white text-lg">
                   <FaWhatsapp />
                 </div>
                 <div>
-                  <div className="text-[9px] uppercase font-bold text-emerald-100 tracking-wider">
-                    Community
+                  <div className="text-[10px] uppercase font-bold text-emerald-100 tracking-wider">
+                    Instant Updates
                   </div>
-                  <div className="text-xs font-black">WhatsApp Group</div>
+                  <div className="text-xs font-black">Join WhatsApp Community</div>
                 </div>
               </div>
               <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
@@ -517,17 +534,17 @@ export default function Home() {
               href={telegramChannel}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl p-3 flex items-center justify-between shadow-sm border border-sky-600 transition group"
+              className="bg-sky-500 hover:bg-sky-600 text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-base">
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white text-lg">
                   <FaTelegramPlane />
                 </div>
                 <div>
-                  <div className="text-[9px] uppercase font-bold text-sky-100 tracking-wider">
-                    Channel
+                  <div className="text-[10px] uppercase font-bold text-sky-100 tracking-wider">
+                    Official Feed
                   </div>
-                  <div className="text-xs font-black">Telegram Join</div>
+                  <div className="text-xs font-black">Join Telegram Channel</div>
                 </div>
               </div>
               <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
@@ -536,26 +553,27 @@ export default function Home() {
         </div>
 
         {/* =================================================
-            PREVIOUS RESULTS SECTION
+            PREVIOUS RESULTS HISTORY
         ================================================= */}
-        <div className="w-full mb-8">
+        <div className="w-full mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-px bg-gray-300 flex-1" />
-            <h2 className="text-xs font-black text-gray-700 uppercase tracking-widest flex items-center gap-1.5">
-              <FaCalendarAlt className="text-amber-500" />
-              Old Results History
+            <div className="h-px bg-sky-200/60 flex-1" />
+            <h2 className="text-xs font-black text-sky-900 uppercase tracking-widest flex items-center gap-1.5">
+              <FaHistory className="text-sky-500" />
+              Past Draw History
             </h2>
-            <div className="h-px bg-gray-300 flex-1" />
+            <div className="h-px bg-sky-200/60 flex-1" />
           </div>
 
-          <div className="w-full space-y-4">
+          <div className="w-full space-y-3.5">
             {historyData.slice(0, visibleHistoryCount).map((history) => (
               <div
                 key={history.date}
-                className="w-full bg-white rounded-xl border border-gray-300 overflow-hidden shadow-sm"
+                className="w-full bg-white rounded-2xl border border-sky-100 overflow-hidden shadow-sm"
               >
-                <div className="bg-amber-400 px-3 py-2 text-center border-b border-amber-500 flex items-center justify-center">
-                  <span className="text-xs font-black text-black uppercase tracking-wider">
+                <div className="bg-sky-100/60 px-3 py-2 text-center border-b border-sky-100 flex items-center justify-center gap-1.5">
+                  <FaCalendarAlt className="text-sky-600 text-xs" />
+                  <span className="text-xs font-extrabold text-sky-900 tracking-wider">
                     DATE: {history.date}
                   </span>
                 </div>
@@ -564,50 +582,50 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Load More Trigger */}
+          {/* Load More Button */}
           {visibleHistoryCount < historyData.length && (
             <button
               onClick={() => setVisibleHistoryCount((prev) => prev + 5)}
-              className="mt-4 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 border border-gray-300 font-bold text-xs py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 active:scale-98"
+              className="mt-4 w-full bg-sky-100/80 hover:bg-sky-200/70 text-sky-900 border border-sky-200/60 font-black text-xs py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 active:scale-95"
             >
-              <span>Load More Results</span>
-              <FaChevronDown className="text-amber-600" />
+              <span>LOAD PREVIOUS DATES</span>
+              <FaChevronDown className="text-sky-600" />
             </button>
           )}
         </div>
 
         {/* =================================================
-            INFORMATION & SEO SECTION
+            INFORMATION & NOTICE CARD
         ================================================= */}
-        <section className="w-full bg-white border border-gray-300 rounded-xl p-4 space-y-4 text-gray-600 text-xs leading-relaxed">
+        <section className="w-full bg-white border border-sky-100 rounded-2xl p-4 space-y-3.5 text-slate-600 text-xs shadow-sm">
           <div>
-            <h3 className="text-gray-900 font-extrabold text-sm mb-1 flex items-center gap-2">
-              <FaInfoCircle className="text-amber-500" />
-              What is bombaybazar FF?
+            <h3 className="text-sky-950 font-extrabold text-xs sm:text-sm mb-1 flex items-center gap-2">
+              <FaInfoCircle className="text-sky-500" />
+              About Bombaybazar Fatafat
             </h3>
-            <p>
-              bombaybazar FF (Fatafat) is a popular timing-based number game played in West Bengal. Results are updated multiple times a day across 8 scheduled rounds (Bazi).
+            <p className="leading-relaxed text-slate-500">
+              Bombaybazar FF is a popular timing-based game. Results are recorded across 12 scheduled rounds daily.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 pt-1">
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-              <h4 className="text-gray-900 font-bold mb-1 flex items-center gap-2">
-                <FaShieldAlt className="text-emerald-600" />
-                Live Result Timings
+          <div className="grid grid-cols-1 gap-2.5 pt-1">
+            <div className="bg-sky-50/60 p-3 rounded-xl border border-sky-100">
+              <h4 className="text-sky-900 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
+                <FaShieldAlt className="text-emerald-500" />
+                Automated Synchronization
               </h4>
-              <p className="text-[11px] text-gray-500">
-                The game operates 8 times daily from morning to evening. Live results are updated automatically on this portal.
+              <p className="text-[11px] text-slate-500 leading-normal">
+                Results update live as each Bazi completes throughout the day.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-              <h4 className="text-gray-900 font-bold mb-1 flex items-center gap-2">
+            <div className="bg-sky-50/60 p-3 rounded-xl border border-sky-100">
+              <h4 className="text-sky-900 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
                 <FaLightbulb className="text-amber-500" />
-                Free Number Tips Notice
+                Fair Play Notice
               </h4>
-              <p className="text-[11px] text-gray-500">
-                This game relies entirely on luck and random draws. Avoid fraudulent channels on social media claiming fixed numbers.
+              <p className="text-[11px] text-slate-500 leading-normal">
+                Draws are purely chance-based. Beware of unofficial agents or fraudulent claims online.
               </p>
             </div>
           </div>
