@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = "https://admin.sikkimff.in/";
+const BASE_URL = "https://admin.bombaybazar.online";
 
 export const apiClient = createApi({
   reducerPath: "api",

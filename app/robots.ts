@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://sikkimff.tech/sitemap.xml",
+    sitemap: "https://bombaybazar.online/sitemap.xml",
   };
 }

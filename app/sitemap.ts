@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-const baseUrl = "https://sikkimff.tech";
+const baseUrl = "https://bombaybazarff.tech";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date();

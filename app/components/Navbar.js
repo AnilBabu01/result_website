@@ -13,7 +13,7 @@ export default function Navbar() {
     // { name: "Home", path: "/" },
     // { name: "Tips", path: "/tips" },
     // { name: "Lucky Number", path: "/luckynumber" },
-    // { name: "Patti Chart", path: "/Sikkim-ff-patti-list-chart-complete-full" },
+    // { name: "Patti Chart", path: "/bombaybazar-ff-patti-list-chart-complete-full" },
   ];
 
   // Track scroll position to enhance navbar styling on scroll
@@ -63,8 +63,8 @@ export default function Navbar() {
               <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-0.5 shadow-md shadow-amber-500/20 transition-transform duration-300 group-hover:scale-105">
                 <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-white">
                   <img
-                    src="/images/sikkimff.png"
-                    alt="Sikkim FF"
+                    src="/images/BombayBazar.png"
+                    alt="bombaybazar FF"
                     className="h-7 w-7 object-contain"
                   />
                 </div>
@@ -73,7 +73,7 @@ export default function Navbar() {
               {/* Logo Text */}
               <div className="flex flex-col">
                 <span className="text-base font-black tracking-wide text-slate-900 transition-colors group-hover:text-amber-600 sm:text-lg">
-                  Sikkim <span className="text-amber-500">RESULT</span>
+                  bombaybazar <span className="text-amber-500">RESULT</span>
                 </span>
                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
                   Result & Tips
@@ -180,7 +180,7 @@ export default function Navbar() {
               S
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">Sikkim Fast</h2>
+              <h2 className="text-base font-bold text-slate-900">bombaybazar Fast</h2>
               <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">
                 Result & Tips
               </p>

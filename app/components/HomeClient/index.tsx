@@ -52,7 +52,7 @@ type HistoryDataItem = {
    CONSTANTS
 ========================================================= */
 
-const RESULT_NAME = "Sikkim FATAFAT";
+const RESULT_NAME = "bombaybazar FATAFAT";
 const TOTAL_BAZI = 8;
 
 /* =========================================================
@@ -394,7 +394,7 @@ export default function Home() {
               FF
             </div>
             <h1 className="font-black tracking-wider text-gray-900 text-base sm:text-lg">
-              Sikkim <span className="text-amber-500">FATAFAT</span>
+              bombaybazar <span className="text-amber-500">FATAFAT</span>
             </h1>
           </div>
           <button
@@ -583,10 +583,10 @@ export default function Home() {
           <div>
             <h3 className="text-gray-900 font-extrabold text-sm mb-1 flex items-center gap-2">
               <FaInfoCircle className="text-amber-500" />
-              What is Sikkim FF?
+              What is bombaybazar FF?
             </h3>
             <p>
-              Sikkim FF (Fatafat) is a popular timing-based number game played in West Bengal. Results are updated multiple times a day across 8 scheduled rounds (Bazi).
+              bombaybazar FF (Fatafat) is a popular timing-based number game played in West Bengal. Results are updated multiple times a day across 8 scheduled rounds (Bazi).
             </p>
           </div>
 
