@@ -2,11 +2,11 @@
 
 export default function LiveBar() {
   const marqueeItems = [
-    "bombaybazar FF Result Today",
+    "sikkimff FF Result Today",
     "Fast & Latest Result Update",
     "Check Today's Result Now",
     "Daily Updated Result",
-    "bombaybazar Fatafat Live Update",
+    "sikkimff Fatafat Live Update",
   ];
 
   return (

@@ -26,39 +26,39 @@ export async function generateMetadata(): Promise<Metadata> {
   const today = getTodayDate();
   const todayISO = getTodayISO();
 
-  const title = `bombaybazar Fatafat FF Result Today | Live bombaybazar FF Results & Tips`;
+  const title = `sikkimff Fatafat FF Result Today | Live sikkimff FF Results & Tips`;
 
-  const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live bombaybazar FF Result Updates for ${today}. Check the bombaybazar Fatafat Result (कोलकाता फटाफट रिजल्ट), updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
+  const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live sikkimff FF Result Updates for ${today}. Check the sikkimff Fatafat Result (कोलकाता फटाफट रिजल्ट), updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
 
   return {
-    metadataBase: new URL("https://bombaybazarff.cloud"),
+    metadataBase: new URL("https://sikkimffff.cloud"),
 
     title: {
       default: title,
-      template: "%s | bombaybazar Fatafat",
+      template: "%s | sikkimff Fatafat",
     },
 
     description,
 
     keywords: [
-      "bombaybazar FF",
-      "bombaybazar Fatafat",
-      "bombaybazar FF result today",
-      "bombaybazar Fatafat result",
-      "bombaybazar FF old result",
-      "bombaybazar FF tips",
-      "bombaybazar FF patti list",
-      "bombaybazar FF bazi chart",
-      "bombaybazar fatafat chart",
+      "sikkimff FF",
+      "sikkimff Fatafat",
+      "sikkimff FF result today",
+      "sikkimff Fatafat result",
+      "sikkimff FF old result",
+      "sikkimff FF tips",
+      "sikkimff FF patti list",
+      "sikkimff FF bazi chart",
+      "sikkimff fatafat chart",
       "8 Bazi Tips",
       "Ghosh Babu Tips",
       "Live Result",
       "Patti Chart",
-      "Satta Matka bombaybazar",
+      "Satta Matka sikkimff",
     ],
 
     alternates: {
-      canonical: "https://bombaybazarff.cloud",
+      canonical: "https://sikkimffff.cloud",
     },
 
     robots: {
@@ -77,7 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       title,
       description,
-      url: "https://bombaybazarff.cloud",
+      url: "https://sikkimffff.cloud",
       siteName: "Kolkata Fatafat",
       locale: "en_IN",
 
@@ -86,7 +86,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "bombaybazar Fatafat FF Result",
+          alt: "sikkimff Fatafat FF Result",
         },
       ],
     },
@@ -95,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description:
-        "Get fastest bombaybazar FF results, old charts, daily tips and patti list online.",
+        "Get fastest sikkimff FF results, old charts, daily tips and patti list online.",
       images: ["/og.png"],
     },
 

@@ -13,7 +13,7 @@ export default function Navbar() {
     // { name: "Home", path: "/" },
     // { name: "Tips", path: "/tips" },
     // { name: "Lucky Number", path: "/luckynumber" },
-    // { name: "Patti Chart", path: "/bombaybazar-ff-patti-list-chart-complete-full" },
+    // { name: "Patti Chart", path: "/sikkimff-ff-patti-list-chart-complete-full" },
   ];
 
   // Track scroll position to enhance navbar styling on scroll
@@ -63,8 +63,8 @@ export default function Navbar() {
               <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-sky-400 to-blue-600 p-[2px] shadow-md shadow-sky-200/50 transition-transform duration-300 group-hover:rotate-12">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
                   <img
-                    src="/images/BombayBazar.png"
-                    alt="bombaybazar FF"
+                    src="/images/sikkimff.png"
+                    alt="sikkimff FF"
                     className="h-6 w-6 object-contain transition-transform duration-300 group-hover:scale-110"
                     // Fallback if image doesn't exist yet
                     onError={(e) => {
@@ -78,7 +78,7 @@ export default function Navbar() {
               {/* Logo Text */}
               <div className="flex flex-col justify-center">
                 <span className="text-base font-extrabold tracking-tight text-slate-800 transition-colors group-hover:text-blue-600 sm:text-lg leading-none">
-                  bombaybazar <span className="text-sky-500">RESULT</span>
+                  sikkimff <span className="text-sky-500">RESULT</span>
                 </span>
                 <span className="text-[10px] font-medium text-sky-600/80 tracking-wide mt-0.5">
                   Fast Updates & Tips
@@ -190,7 +190,7 @@ export default function Navbar() {
             </div>
             <div>
               <h2 className="text-base font-extrabold text-slate-800 leading-tight">
-                bombaybazar
+                sikkimff
               </h2>
               <p className="text-[10px] font-bold text-sky-500 uppercase tracking-widest">
                 Fast Result

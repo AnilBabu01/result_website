@@ -16,6 +16,11 @@ import {
   FaBolt,
   FaExternalLinkAlt,
   FaExclamationTriangle,
+  FaQuestionCircle,
+  FaTrophy,
+  FaSearch,
+  FaChartLine,
+  FaGlobe,
 } from "react-icons/fa";
 
 import {
@@ -55,8 +60,8 @@ type HistoryDataItem = {
    CONSTANTS
 ========================================================= */
 
-const RESULT_NAME = "bombaybazar FATAFAT";
-const TOTAL_BAZI = 12;
+const RESULT_NAME = "sikkimff FATAFAT";
+const TOTAL_BAZI = 8; // Applied 8 Bazi limit
 
 /* =========================================================
    DATE HELPERS
@@ -215,7 +220,7 @@ export default function Home() {
   const telegramChannel = appData?.data?.telegram_channel || "#";
 
   /* =======================================================
-     TODAY RESULTS
+     TODAY RESULTS (RESTRICTED TO 8 BAZI)
   ======================================================= */
 
   const todayResults = useMemo(() => {
@@ -244,7 +249,7 @@ export default function Home() {
   }, [todayResults, hasTodayResult]);
 
   /* =======================================================
-     HISTORY DATA
+     HISTORY DATA (RESTRICTED TO 8 BAZI PER DAY)
   ======================================================= */
 
   const historyData: HistoryDataItem[] = useMemo(() => {
@@ -330,22 +335,22 @@ export default function Home() {
   }
 
   /* =======================================================
-     GRID BOARD RENDERER (SKY BLUE THEME)
+     GRID BOARD RENDERER (8 BAZI GRID SYSTEM)
   ======================================================= */
 
   const renderGridBoard = (values: string[], resultsList: string[]) => {
     return (
       <div className="w-full overflow-x-auto">
         <div className="min-w-full">
-          {/* Header Rounds Indicator */}
-          <div className="grid grid-cols-12 bg-sky-100/80 border-b border-sky-200 text-[10px] font-extrabold text-sky-800 text-center py-1">
+          {/* Header Rounds Indicator - 8 Columns */}
+          <div className="grid grid-cols-8 bg-sky-100/80 border-b border-sky-200 text-[10px] sm:text-xs font-extrabold text-sky-800 text-center py-1.5">
             {Array.from({ length: TOTAL_BAZI }, (_, i) => (
               <div key={`head-${i}`}>{i + 1}</div>
             ))}
           </div>
 
           {/* Values Row (Patti/Last No) */}
-          <div className="grid grid-cols-12 w-full bg-white border-b border-sky-100">
+          <div className="grid grid-cols-8 w-full bg-white border-b border-sky-100">
             {Array.from({ length: TOTAL_BAZI }, (_, i) => {
               const val = values[i] || "-";
               const isOff = val === "OFF";
@@ -363,7 +368,7 @@ export default function Home() {
           </div>
 
           {/* Results Row (Single/First No) */}
-          <div className="grid grid-cols-12 w-full bg-sky-50/40">
+          <div className="grid grid-cols-8 w-full bg-sky-50/40">
             {Array.from({ length: TOTAL_BAZI }, (_, i) => {
               const res = resultsList[i] || "-";
               const isOff = res === "OFF";
@@ -407,10 +412,10 @@ export default function Home() {
             </div>
             <div>
               <h1 className="font-black tracking-wide text-white text-base sm:text-lg leading-tight">
-                BOMBAYBAZAR
+                sikkimff
               </h1>
               <span className="text-[10px] font-extrabold tracking-widest text-sky-100 uppercase block -mt-0.5">
-                Fatafat Live
+                Fatafat Live (8 Bazi)
               </span>
             </div>
           </div>
@@ -431,7 +436,7 @@ export default function Home() {
 
       <div className="max-w-md mx-auto px-3.5 pt-4 flex flex-col items-center">
         {/* =================================================
-            LIVE / TODAY RESULT CARD
+            LIVE / TODAY RESULT CARD (8 BAZI)
         ================================================= */}
         <section className="w-full bg-white border border-sky-100 rounded-2xl overflow-hidden shadow-xl shadow-sky-500/5 mb-4">
           {/* Card Banner Header */}
@@ -442,7 +447,7 @@ export default function Home() {
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 border-2 border-white"></span>
               </span>
               <span className="text-xs font-black uppercase tracking-wider">
-                Live Today Board
+                Live Today Board (8 Bazi)
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-[11px] font-bold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
@@ -553,14 +558,14 @@ export default function Home() {
         </div>
 
         {/* =================================================
-            PREVIOUS RESULTS HISTORY
+            PREVIOUS RESULTS HISTORY (8 BAZI)
         ================================================= */}
         <div className="w-full mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px bg-sky-200/60 flex-1" />
             <h2 className="text-xs font-black text-sky-900 uppercase tracking-widest flex items-center gap-1.5">
               <FaHistory className="text-sky-500" />
-              Past Draw History
+              Past Draw History (8 Bazi)
             </h2>
             <div className="h-px bg-sky-200/60 flex-1" />
           </div>
@@ -595,39 +600,85 @@ export default function Home() {
         </div>
 
         {/* =================================================
-            INFORMATION & NOTICE CARD
+            sikkimFF INFORMATION SECTION (INTEGRATED)
         ================================================= */}
-        <section className="w-full bg-white border border-sky-100 rounded-2xl p-4 space-y-3.5 text-slate-600 text-xs shadow-sm">
-          <div>
-            <h3 className="text-sky-950 font-extrabold text-xs sm:text-sm mb-1 flex items-center gap-2">
-              <FaInfoCircle className="text-sky-500" />
-              About Bombaybazar Fatafat
+        <section className="w-full bg-white border border-sky-100 rounded-2xl p-5 space-y-5 text-slate-600 text-xs shadow-sm mb-6">
+          {/* Header Banner */}
+          <div className="border-b border-sky-100 pb-3">
+            <h3 className="text-sky-950 font-black text-base sm:text-lg mb-1 flex items-center gap-2">
+              <FaGlobe className="text-sky-500" />
+              What is sikkimFF (Fatafat)?
             </h3>
-            <p className="leading-relaxed text-slate-500">
-              Bombaybazar FF is a popular timing-based game. Results are recorded across 12 scheduled rounds daily.
+            <p className="text-slate-500 text-xs leading-relaxed">
+              This is the premier portal for fast sikkimFF Fatafat results. Access today’s live results alongside historical old charts online free of cost.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-2.5 pt-1">
-            <div className="bg-sky-50/60 p-3 rounded-xl border border-sky-100">
-              <h4 className="text-sky-900 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
-                <FaShieldAlt className="text-emerald-500" />
-                Automated Synchronization
+          {/* Welcome Highlight */}
+          <div className="bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-100 rounded-xl p-3.5 text-center">
+            <h4 className="font-extrabold text-sky-900 text-sm mb-1">
+              Welcome to sikkimFatafat Result
+            </h4>
+            <p className="text-[11px] text-sky-700 font-medium">
+              sikkimFatafat Today Result ❤️ sikkimFF Result Sabse Pahle Yahi Par Aata Hai ❤️ কলকাতা ফতাফত ❤️ कोलकाता Fatafat Chart Dekho ❤️ Patti Aur Single Ke Sath Chart ❤️
+            </p>
+          </div>
+
+          {/* Detailed Content Grid */}
+          <div className="space-y-4">
+            {/* Overview & Gameplay */}
+            <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-2xs">
+              <h4 className="text-slate-800 font-black text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <FaTrophy className="text-amber-500" />
+                sikkimFF Result & Satta Game
               </h4>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                Results update live as each Bazi completes throughout the day.
+              <p className="leading-relaxed text-slate-500 text-[11px]">
+                Satta games are played across the country, with significant participation from sikkim government and nearby states. The game operates on guessing numbers where participants put forward an amount to win a prespecified reward. Correct guesses yield major payouts, whereas incorrect entries lose the invested amount. Results on this portal update **8 times a day (8 Bazi)**.
               </p>
             </div>
 
-            <div className="bg-sky-50/60 p-3 rounded-xl border border-sky-100">
-              <h4 className="text-sky-900 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
-                <FaLightbulb className="text-amber-500" />
-                Fair Play Notice
+            {/* Free Tips Notice */}
+            <div className="bg-amber-50/70 p-3.5 rounded-xl border border-amber-200/60">
+              <h4 className="text-amber-900 font-bold text-xs mb-1 flex items-center gap-1.5">
+                <FaLightbulb className="text-amber-600" />
+                Free sikkimFF Tips & Fraud Warning
               </h4>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                Draws are purely chance-based. Beware of unofficial agents or fraudulent claims online.
+              <p className="leading-relaxed text-amber-800/90 text-[11px]">
+                Many sources on social platforms promise guaranteed numbers for money. Note that no guaranteed trick exists; the game depends on individual calculation and luck. Reviewing **sikkimFF Old Results** can assist in forming numerical estimates. Avoid paying third parties for fake outcome predictions.
               </p>
             </div>
+
+            {/* How to Find Results */}
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60">
+              <h4 className="text-slate-900 font-bold text-xs mb-1.5 flex items-center gap-1.5">
+                <FaSearch className="text-sky-600" />
+                How to Check Today's sikkimFF Result
+              </h4>
+              <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-600 font-medium">
+                <li>Open this live portal home page.</li>
+                <li>Locate today’s active Bazi round (1 to 8).</li>
+                <li>Verify your number under the specific Bazi column to check winning status.</li>
+              </ol>
+            </div>
+
+            {/* Old Result & Online Accessibility */}
+            <div className="bg-sky-50/50 p-3.5 rounded-xl border border-sky-100 space-y-2">
+              <h4 className="text-sky-950 font-bold text-xs flex items-center gap-1.5">
+                <FaChartLine className="text-sky-500" />
+                Online Play & Previous Records
+              </h4>
+              <p className="leading-relaxed text-slate-500 text-[11px]">
+                Historically played offline, modern developments allow players to follow calculations and track **কলকাতা Fatafat** results via mobile devices and online interfaces. Our record table provides comprehensive multi-day historical charts for verification.
+              </p>
+            </div>
+          </div>
+
+          {/* Standard Information Notice */}
+          <div className="border-t border-slate-100 pt-3 flex items-start gap-2 text-slate-400 text-[10px]">
+            <FaShieldAlt className="text-slate-400 text-xs mt-0.5 shrink-0" />
+            <p>
+              Information provided is for tracking, historical records, and analytical purposes. Always play responsibly and check local regulations.
+            </p>
           </div>
         </section>
       </div>

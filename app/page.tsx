@@ -3,9 +3,9 @@ import LiveBar from "./components/LiveBar";
 import HomeClient from "./components/HomeClient/index";
 
 export const metadata = {
-  title: "bombaybazar FF Result Today Live",
+  title: "sikkimff FF Result Today Live",
   description:
-    "Live bombaybazar FF Results Today. Check fastest updates, tips, lucky numbers and old results.",
+    "Live sikkimff FF Results Today. Check fastest updates, tips, lucky numbers and old results.",
 };
 
 export default function Page() {
@@ -13,7 +13,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: "Kolkata FF Result Today",
-    url: "https://bombaybazar.online",
+    url: "https://sikkimff.in",
     description: "Live Kolkata FF Results and Tips",
   };
 

@@ -13,7 +13,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: "Kolkata FF Result Today",
-    url: "https://bombaybazarff.cloud",
+    url: "https://sikkimffff.cloud",
     description: "Live Kolkata FF Results and Tips",
   };
 
