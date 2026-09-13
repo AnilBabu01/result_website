@@ -16,6 +16,7 @@ import {
   FaBolt,
   FaExternalLinkAlt,
   FaExclamationTriangle,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 import {
@@ -33,6 +34,7 @@ type ResultItem = {
   created_at: string;
   first_no: string;
   last_no: string;
+  close_time?: string;
 };
 
 type ApiResponse = {
@@ -43,12 +45,14 @@ type TodayTableItem = {
   no: number;
   value: string;
   result: string;
+  closeTime?: string;
 };
 
 type HistoryDataItem = {
   date: string;
   values: string[];
   results: string[];
+  closeTimes: string[];
 };
 
 /* =========================================================
@@ -70,9 +74,7 @@ function getLocalDateString(): string {
   return `${year}-${month}-${day}`;
 }
 
-function normalizeResultDate(
-  createdAt: string | null | undefined
-): string {
+function normalizeResultDate(createdAt: string | null | undefined): string {
   if (!createdAt) return "";
   const value = String(createdAt).trim();
   if (!value) return "";
@@ -98,7 +100,7 @@ function formatHistoryDate(dateString: string): string {
   const parts = dateString.split("-");
   if (parts.length !== 3) return dateString;
   const [year, month, day] = parts;
-  return `${day}/${month}/${year}`;
+  return `${day}.${month}.${year}`;
 }
 
 function getBaziId(item: ResultItem): number {
@@ -233,6 +235,7 @@ export default function Home() {
         no: index + 1,
         value: "OFF",
         result: "OFF",
+        closeTime: "-",
       }));
     }
 
@@ -240,6 +243,7 @@ export default function Home() {
       no: index + 1,
       value: getValue(item.last_no),
       result: getValue(item.first_no),
+      closeTime: item.close_time || "-",
     }));
   }, [todayResults, hasTodayResult]);
 
@@ -275,9 +279,90 @@ export default function Home() {
           date: formatHistoryDate(dateStr),
           values: dayData.map((item) => getValue(item.last_no)),
           results: dayData.map((item) => getValue(item.first_no)),
+          closeTimes: dayData.map((item) => item.close_time || "-"),
         };
       });
   }, [results, todayDate]);
+
+  /* =======================================================
+     GRID BOARD RENDERER
+  ======================================================= */
+
+  const renderGridBoard = (
+    values: string[],
+    resultsList: string[],
+    closeTimes?: string[]
+  ) => {
+    return (
+      <div className="w-full overflow-x-auto select-none">
+        <div className="min-w-[640px] sm:min-w-full border-t border-indigo-100">
+          {/* Header Rounds Indicator */}
+          <div className="grid grid-cols-12 bg-indigo-600 text-white font-bold text-center text-xs sm:text-sm divide-x divide-indigo-500">
+            {Array.from({ length: TOTAL_BAZI }, (_, i) => (
+              <div key={`head-${i}`} className="py-2">
+                {i + 1}
+              </div>
+            ))}
+          </div>
+
+          {/* Dynamic Close Time Header Row */}
+          <div className="grid grid-cols-12 bg-slate-100 border-b border-indigo-100 text-center text-[9px] sm:text-[10px] font-semibold text-slate-600 divide-x divide-slate-200">
+            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+              const time = closeTimes?.[i];
+              return (
+                <div
+                  key={`time-header-${i}`}
+                  className="py-1 px-0.5 leading-tight font-extrabold flex items-center justify-center min-h-[28px]"
+                >
+                  {time && time !== "-" ? (
+                    <span className="text-indigo-700 whitespace-normal break-words">
+                      {time}
+                    </span>
+                  ) : (
+                    <span className="text-slate-400">-</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Results Grid Content */}
+          <div className="grid grid-cols-12 bg-white divide-x divide-slate-200">
+            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+              const val = values[i] || "***_*";
+              const res = resultsList[i] || "*";
+              const isValOff = val === "OFF" || val === "***_*";
+              const isResOff = res === "OFF" || res === "*";
+
+              return (
+                <div
+                  key={`cell-${i}`}
+                  className="py-3 px-1 text-center flex flex-col items-center justify-center min-h-[72px] bg-gradient-to-b from-slate-50/50 to-white"
+                >
+                  <span
+                    className={`text-xs sm:text-sm font-black tracking-tighter ${
+                      isValOff
+                        ? "text-indigo-400 font-normal"
+                        : "text-indigo-600"
+                    }`}
+                  >
+                    {val}
+                  </span>
+                  <span
+                    className={`text-base sm:text-lg font-black mt-0.5 leading-none ${
+                      isResOff ? "text-rose-400 font-normal" : "text-rose-600"
+                    }`}
+                  >
+                    {res}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   /* =======================================================
      LOADING STATE
@@ -285,12 +370,12 @@ export default function Home() {
 
   if (resultLoading) {
     return (
-      <div className="min-h-screen bg-sky-50 flex flex-col items-center justify-center text-sky-900">
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-indigo-900">
         <div className="relative flex items-center justify-center">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600" />
-          <FaBolt className="absolute text-sky-600 text-lg animate-pulse" />
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
+          <FaBolt className="absolute text-indigo-600 text-lg animate-pulse" />
         </div>
-        <p className="mt-4 font-bold text-sky-700 tracking-wider text-xs uppercase">
+        <p className="mt-4 font-bold text-indigo-700 tracking-wider text-xs uppercase">
           Loading Live Data...
         </p>
       </div>
@@ -303,8 +388,8 @@ export default function Home() {
 
   if (resultError) {
     return (
-      <div className="min-h-screen bg-sky-50 flex items-center justify-center px-4">
-        <div className="bg-white border border-sky-100 rounded-3xl p-8 text-center max-w-md w-full shadow-xl shadow-sky-100/50">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+        <div className="bg-white border border-indigo-100 rounded-3xl p-8 text-center max-w-md w-full shadow-xl shadow-indigo-100/50">
           <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-4 border border-red-100">
             <FaExclamationTriangle />
           </div>
@@ -312,16 +397,15 @@ export default function Home() {
             Connection Lost
           </h2>
           <p className="text-slate-500 text-xs mb-6">
-            Unable to fetch data from the server. Please check your internet connection.
+            Unable to fetch data from the server. Please check your internet
+            connection.
           </p>
           <button
             onClick={handleRefresh}
             disabled={manualRefreshing}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 hover:bg-sky-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-sky-500/30 active:scale-95 transition disabled:opacity-60"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 px-6 py-3.5 font-bold text-white shadow-lg shadow-indigo-500/30 active:scale-95 transition disabled:opacity-60"
           >
-            <FaSyncAlt
-              className={manualRefreshing ? "animate-spin" : ""}
-            />
+            <FaSyncAlt className={manualRefreshing ? "animate-spin" : ""} />
             {manualRefreshing ? "Retrying..." : "Retry Connection"}
           </button>
         </div>
@@ -330,94 +414,38 @@ export default function Home() {
   }
 
   /* =======================================================
-     GRID BOARD RENDERER (SKY BLUE THEME)
-  ======================================================= */
-
-  const renderGridBoard = (values: string[], resultsList: string[]) => {
-    return (
-      <div className="w-full overflow-x-auto">
-        <div className="min-w-full">
-          {/* Header Rounds Indicator */}
-          <div className="grid grid-cols-12 bg-sky-100/80 border-b border-sky-200 text-[10px] font-extrabold text-sky-800 text-center py-1">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => (
-              <div key={`head-${i}`}>{i + 1}</div>
-            ))}
-          </div>
-
-          {/* Values Row (Patti/Last No) */}
-          <div className="grid grid-cols-12 w-full bg-white border-b border-sky-100">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-              const val = values[i] || "-";
-              const isOff = val === "OFF";
-              return (
-                <div
-                  key={`val-${i}`}
-                  className={`py-2 px-0.5 text-center text-[10px] sm:text-xs font-semibold border-r last:border-r-0 border-sky-100/60 ${
-                    isOff ? "text-rose-500 font-bold" : "text-slate-600"
-                  }`}
-                >
-                  {val}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Results Row (Single/First No) */}
-          <div className="grid grid-cols-12 w-full bg-sky-50/40">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-              const res = resultsList[i] || "-";
-              const isOff = res === "OFF";
-              return (
-                <div
-                  key={`res-${i}`}
-                  className={`py-2.5 px-0.5 text-center text-xs sm:text-sm font-black border-r last:border-r-0 border-sky-100/60 ${
-                    isOff ? "text-rose-500" : "text-sky-950"
-                  }`}
-                >
-                  {res}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  /* =======================================================
      MAIN LAYOUT
   ======================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-700 font-sans antialiased pb-16">
-      {/* Top Bar Refresh Notification */}
+    <main className="min-h-screen bg-gradient-to-b from-indigo-50/40 via-purple-50/20 to-slate-50 text-slate-700 font-sans antialiased pb-16">
       {(manualRefreshing || resultFetching) && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-sky-600 text-white px-4 py-2 text-xs font-bold shadow-md flex items-center justify-center gap-2 animate-pulse">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-indigo-600 text-white px-4 py-2 text-xs font-bold shadow-md flex items-center justify-center gap-2 animate-pulse">
           <FaSyncAlt className="animate-spin text-white" />
           <span>Syncing real-time updates...</span>
         </div>
       )}
 
       {/* Hero Header */}
-      <header className="bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/10 sticky top-0 z-40">
+      <header className="bg-white/80 backdrop-blur-md border-b border-indigo-100 text-indigo-950 sticky top-0 z-40 shadow-sm">
         <div className="max-w-md mx-auto px-4 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-black text-sm shadow-inner border border-white/20">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-md shadow-indigo-500/20">
               <FaBolt className="text-yellow-300" />
             </div>
             <div>
-              <h1 className="font-black tracking-wide text-white text-base sm:text-lg leading-tight">
-                BOMBAYBAZAR
+              <h1 className="font-black tracking-wide text-indigo-900 text-base sm:text-lg leading-tight">
+                bombaybazar FATAFAT
               </h1>
-              <span className="text-[10px] font-extrabold tracking-widest text-sky-100 uppercase block -mt-0.5">
-                Fatafat Live
+              <span className="text-[10px] font-extrabold tracking-widest text-indigo-500 uppercase block -mt-0.5">
+                Official Live Portal
               </span>
             </div>
           </div>
           <button
             onClick={handleRefresh}
             disabled={manualRefreshing || resultFetching}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-xs font-bold text-white backdrop-blur-md active:scale-95 transition disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-xs font-bold text-indigo-700 active:scale-95 transition disabled:opacity-50"
           >
             <FaSyncAlt
               className={`${
@@ -429,57 +457,62 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-md mx-auto px-3.5 pt-4 flex flex-col items-center">
+      <div className="max-w-md mx-auto px-3.5 pt-5 flex flex-col items-center">
         {/* =================================================
             LIVE / TODAY RESULT CARD
         ================================================= */}
-        <section className="w-full bg-white border border-sky-100 rounded-2xl overflow-hidden shadow-xl shadow-sky-500/5 mb-4">
-          {/* Card Banner Header */}
-          <div className="bg-gradient-to-r from-sky-500 to-cyan-500 p-3.5 text-white flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 border-2 border-white"></span>
+        <section className="w-full bg-white border border-indigo-100 rounded-3xl overflow-hidden shadow-xl shadow-indigo-500/5 mb-5">
+          <div className="p-4 bg-white flex items-center justify-between border-b border-slate-100">
+            <h2 className="text-lg font-black text-indigo-950 tracking-tight">
+              Today's Results
+            </h2>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500 text-white text-[11px] font-bold shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+              LIVE
+            </span>
+          </div>
+
+          <div className="py-4 flex justify-center bg-slate-50/60 border-b border-slate-100">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-50/70 border border-indigo-100 text-xs font-black text-indigo-950 shadow-inner">
+              <FaCalendarAlt className="text-indigo-500 text-xs" />
+              <span>
+                DATE: {todayDate ? formatHistoryDate(todayDate) : "LOADING..."}
               </span>
-              <span className="text-xs font-black uppercase tracking-wider">
-                Live Today Board
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 text-[11px] font-bold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
-              <FaCalendarAlt className="text-sky-100" />
-              <span>{date || "LOADING..."}</span>
             </div>
           </div>
 
           {/* Grid Render */}
           {renderGridBoard(
             todayTableData.map((i) => i.value),
-            todayTableData.map((i) => i.result)
+            todayTableData.map((i) => i.result),
+            todayTableData.map((i) => i.closeTime || "-")
           )}
 
-          {/* OFF Notice if no records */}
           {!hasTodayResult && (
             <div className="text-center py-2.5 bg-rose-50 border-t border-rose-100 text-rose-600 font-bold text-[11px] uppercase tracking-wider">
               Today's Draws are Currently Closed
             </div>
           )}
-        </section>
 
-        {/* Action Button: Quick Refresh */}
-        <button
-          onClick={handleRefresh}
-          disabled={manualRefreshing || resultFetching}
-          className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-2xl shadow-lg shadow-sky-500/25 border border-sky-400 flex items-center justify-center gap-2 mb-5 active:scale-[0.98] transition disabled:opacity-60 cursor-pointer"
-        >
-          <FaSyncAlt
-            className={manualRefreshing || resultFetching ? "animate-spin" : ""}
-          />
-          <span>
-            {manualRefreshing || resultFetching
-              ? "FETCHING LATEST DRAW..."
-              : "REFRESH LIVE BOARD"}
-          </span>
-        </button>
+          <div className="p-3 bg-white">
+            <button
+              onClick={handleRefresh}
+              disabled={manualRefreshing || resultFetching}
+              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-2xl shadow-md shadow-indigo-500/20 border border-indigo-500 flex items-center justify-center gap-2 active:scale-[0.98] transition disabled:opacity-60 cursor-pointer"
+            >
+              <FaSyncAlt
+                className={
+                  manualRefreshing || resultFetching ? "animate-spin" : ""
+                }
+              />
+              <span>
+                {manualRefreshing || resultFetching
+                  ? "FETCHING LATEST DRAW..."
+                  : "REFRESH RESULTS"}
+              </span>
+            </button>
+          </div>
+        </section>
 
         {/* =================================================
             COMMUNITY & DOWNLOAD CTA LINKS
@@ -522,7 +555,9 @@ export default function Home() {
                   <div className="text-[10px] uppercase font-bold text-emerald-100 tracking-wider">
                     Instant Updates
                   </div>
-                  <div className="text-xs font-black">Join WhatsApp Community</div>
+                  <div className="text-xs font-black">
+                    Join WhatsApp Community
+                  </div>
                 </div>
               </div>
               <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
@@ -544,7 +579,9 @@ export default function Home() {
                   <div className="text-[10px] uppercase font-bold text-sky-100 tracking-wider">
                     Official Feed
                   </div>
-                  <div className="text-xs font-black">Join Telegram Channel</div>
+                  <div className="text-xs font-black">
+                    Join Telegram Channel
+                  </div>
                 </div>
               </div>
               <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
@@ -556,40 +593,38 @@ export default function Home() {
             PREVIOUS RESULTS HISTORY
         ================================================= */}
         <div className="w-full mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px bg-sky-200/60 flex-1" />
-            <h2 className="text-xs font-black text-sky-900 uppercase tracking-widest flex items-center gap-1.5">
-              <FaHistory className="text-sky-500" />
-              Past Draw History
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <FaHistory className="text-indigo-600 text-sm" />
+            <h2 className="text-sm font-black text-indigo-950 uppercase tracking-wider">
+              OLD RECORD PANEL
             </h2>
-            <div className="h-px bg-sky-200/60 flex-1" />
           </div>
 
-          <div className="w-full space-y-3.5">
+          <div className="w-full space-y-4">
             {historyData.slice(0, visibleHistoryCount).map((history) => (
               <div
                 key={history.date}
-                className="w-full bg-white rounded-2xl border border-sky-100 overflow-hidden shadow-sm"
+                className="w-full bg-white rounded-3xl border border-indigo-100 overflow-hidden shadow-sm"
               >
-                <div className="bg-sky-100/60 px-3 py-2 text-center border-b border-sky-100 flex items-center justify-center gap-1.5">
-                  <FaCalendarAlt className="text-sky-600 text-xs" />
-                  <span className="text-xs font-extrabold text-sky-900 tracking-wider">
-                    DATE: {history.date}
-                  </span>
+                <div className="py-2.5 bg-gradient-to-r from-sky-400 to-cyan-400 text-white text-center font-black text-xs tracking-wider uppercase">
+                  {history.date}
                 </div>
-                {renderGridBoard(history.values, history.results)}
+                {renderGridBoard(
+                  history.values,
+                  history.results,
+                  history.closeTimes
+                )}
               </div>
             ))}
           </div>
 
-          {/* Load More Button */}
           {visibleHistoryCount < historyData.length && (
             <button
               onClick={() => setVisibleHistoryCount((prev) => prev + 5)}
-              className="mt-4 w-full bg-sky-100/80 hover:bg-sky-200/70 text-sky-900 border border-sky-200/60 font-black text-xs py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 active:scale-95"
+              className="mt-4 w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 font-black text-xs py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 active:scale-95"
             >
               <span>LOAD PREVIOUS DATES</span>
-              <FaChevronDown className="text-sky-600" />
+              <FaChevronDown className="text-indigo-600" />
             </button>
           )}
         </div>
@@ -597,20 +632,21 @@ export default function Home() {
         {/* =================================================
             INFORMATION & NOTICE CARD
         ================================================= */}
-        <section className="w-full bg-white border border-sky-100 rounded-2xl p-4 space-y-3.5 text-slate-600 text-xs shadow-sm">
+        <section className="w-full bg-white border border-indigo-100 rounded-3xl p-5 space-y-4 text-slate-600 text-xs shadow-sm mb-6">
           <div>
-            <h3 className="text-sky-950 font-extrabold text-xs sm:text-sm mb-1 flex items-center gap-2">
-              <FaInfoCircle className="text-sky-500" />
+            <h3 className="text-indigo-950 font-black text-sm mb-1 flex items-center gap-2">
+              <FaInfoCircle className="text-indigo-600" />
               About Bombaybazar Fatafat
             </h3>
             <p className="leading-relaxed text-slate-500">
-              Bombaybazar FF is a popular timing-based game. Results are recorded across 12 scheduled rounds daily.
+              Bombaybazar FF is a popular timing-based game. Results are
+              recorded across 12 scheduled rounds daily.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-2.5 pt-1">
-            <div className="bg-sky-50/60 p-3 rounded-xl border border-sky-100">
-              <h4 className="text-sky-900 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
+            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <h4 className="text-indigo-950 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
                 <FaShieldAlt className="text-emerald-500" />
                 Automated Synchronization
               </h4>
@@ -619,15 +655,73 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-sky-50/60 p-3 rounded-xl border border-sky-100">
-              <h4 className="text-sky-900 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
+            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <h4 className="text-indigo-950 font-bold mb-0.5 flex items-center gap-1.5 text-xs">
                 <FaLightbulb className="text-amber-500" />
                 Fair Play Notice
               </h4>
               <p className="text-[11px] text-slate-500 leading-normal">
-                Draws are purely chance-based. Beware of unofficial agents or fraudulent claims online.
+                Draws are purely chance-based. Beware of unofficial agents or
+                fraudulent claims online.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* =================================================
+            WHAT IS BOMBAYBAZAR FF ?
+        ================================================= */}
+        <section className="w-full bg-white border border-indigo-100 rounded-3xl p-5 space-y-4 text-slate-600 text-xs shadow-sm">
+          <div className="border-b border-slate-100 pb-3">
+            <h3 className="text-indigo-950 font-black text-base flex items-center gap-2">
+              <FaQuestionCircle className="text-indigo-600" />
+              What is bombaybazar FF?
+            </h3>
+          </div>
+
+          <div className="space-y-3 leading-relaxed text-slate-600">
+            <p>
+              bombaybazar ff sabse pahle This is the bombaybazar photo fort
+              official ⭐⭐⭐ No# 1✅✅✅ website🌏 for all bombaybazar people
+              who want to get fast bombaybazar ff fatafat result. Here you can
+              see all today and previous all old and new results online free.
+            </p>
+
+            <h4 className="font-extrabold text-indigo-900 text-sm pt-2">
+              Welcome to bombaybazar Fatafat Result
+            </h4>
+            <p>
+              bombaybazar Fatafat Today Result ❤️ bombaybazar FF Result Sabse
+              Pahle Yahi Par Aata Hai ❤️
+            </p>
+
+            <h4 className="font-extrabold text-indigo-900 text-sm pt-2">
+              bombaybazar FF Tips for free
+            </h4>
+            <p>
+              This game is completely based on luck and your own intellect. With
+              the help of bombaybazar FF Old Results, you can make some
+              estimates about the upcoming number.
+            </p>
+
+            <h4 className="font-extrabold text-indigo-900 text-sm pt-2">
+              How to find bombaybazar FF Today Result
+            </h4>
+            <p>
+              At first, you have to open this portal. Now on the home page of
+              this portal find out your today game bazi. Then verify the number
+              below that.
+            </p>
+
+            <h4 className="font-extrabold text-indigo-900 text-sm pt-2">
+              bombaybazar FF Old Result
+            </h4>
+            <p>
+              On the home page of this satta portal, you will find a large
+              previous record table of the results. In this table, you will
+              become able to find out bombaybazar FF Old Results of previous
+              days.
+            </p>
           </div>
         </section>
       </div>
