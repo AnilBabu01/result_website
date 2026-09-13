@@ -157,6 +157,9 @@ export default function Home() {
     refetch: () => Promise<any>;
   };
 
+
+  console.log("rawResultData from home",rawResultData);
+
   /* =======================================================
      REFRESH BUTTON HANDLER
   ======================================================= */
@@ -345,7 +348,7 @@ export default function Home() {
           {/* Header Rounds Indicator - 8 Columns */}
           <div className="grid grid-cols-8 bg-sky-100/80 border-b border-sky-200 text-[10px] sm:text-xs font-extrabold text-sky-800 text-center py-1.5">
             {Array.from({ length: TOTAL_BAZI }, (_, i) => (
-              <div key={`head-${i}`}>{i + 1}</div>
+              <div key={`head-${i}`}>BAZI-{i + 1}</div>
             ))}
           </div>
 
@@ -412,7 +415,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="font-black tracking-wide text-white text-base sm:text-lg leading-tight">
-                sikkimff
+                Sikkim Fatafat
               </h1>
               <span className="text-[10px] font-extrabold tracking-widest text-sky-100 uppercase block -mt-0.5">
                 Fatafat Live (8 Bazi)

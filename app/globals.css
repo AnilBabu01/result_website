@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-/* =========================================================
-   ROOT
-========================================================= */
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,10 +13,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* =========================================================
-   DARK MODE
-========================================================= */
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -28,45 +20,58 @@
   }
 }
 
-/* =========================================================
-   BODY
-========================================================= */
+* {
+  box-sizing: border-box;
+}
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
 /* =========================================================
-   OLD SCROLL ANIMATION
+   LIVE MARQUEE
 ========================================================= */
 
-@keyframes scrollText {
+.live-marquee-track {
+  animation: liveMarquee 25s linear infinite;
+  will-change: transform;
+}
+
+/*
+  Pause marquee when mouse is over ticker
+*/
+.live-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+
+/*
+  The track contains TWO identical copies.
+
+  Moving exactly 50% means the second copy takes the
+  exact position of the first copy, creating a seamless loop.
+*/
+@keyframes liveMarquee {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
 
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
-.animate-scroll {
-  display: inline-block;
-  white-space: nowrap;
-  animation: scrollText 12s linear infinite;
-}
 
 /* =========================================================
-   BLINK
+   LIVE DOT
 ========================================================= */
 
 @keyframes blink {
@@ -85,77 +90,17 @@ body {
   animation: blink 1s linear infinite;
 }
 
-/* =========================================================
-   LIVE MARQUEE
-========================================================= */
-
-@keyframes liveMarquee {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-.live-marquee-track {
-  display: flex;
-  width: max-content;
-  min-width: 200%;
-  align-items: center;
-
-  animation: liveMarquee 25s linear infinite;
-
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Each copy must have identical width/content */
-.live-marquee-group {
-  display: flex;
-  width: max-content;
-  min-width: 50%;
-  flex-shrink: 0;
-  align-items: center;
-}
-
-/* =========================================================
-   PAUSE ON HOVER
-========================================================= */
-
-.live-marquee-track:hover {
-  animation-play-state: paused;
-}
 
 /* =========================================================
    ACCESSIBILITY
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .live-marquee-track,
-  .animate-scroll,
-  .blink {
+  .live-marquee-track {
     animation: none;
   }
-}
 
-/* =========================================================
-   MOBILE SPEED
-========================================================= */
-
-@media (max-width: 640px) {
-  .live-marquee-track {
-    animation-duration: 20s;
-  }
-}
-
-/* =========================================================
-   LARGE SCREEN
-========================================================= */
-
-@media (min-width: 1024px) {
-  .live-marquee-track {
-    animation-duration: 28s;
+  .blink {
+    animation: none;
   }
 }

@@ -78,7 +78,7 @@ export default function Navbar() {
               {/* Logo Text */}
               <div className="flex flex-col justify-center">
                 <span className="text-base font-extrabold tracking-tight text-slate-800 transition-colors group-hover:text-blue-600 sm:text-lg leading-none">
-                  sikkimff <span className="text-sky-500">RESULT</span>
+                  Sikkim <span className="text-sky-500"> FF RESULT</span>
                 </span>
                 <span className="text-[10px] font-medium text-sky-600/80 tracking-wide mt-0.5">
                   Fast Updates & Tips
@@ -190,10 +190,10 @@ export default function Navbar() {
             </div>
             <div>
               <h2 className="text-base font-extrabold text-slate-800 leading-tight">
-                sikkimff
+                Sikkim
               </h2>
               <p className="text-[10px] font-bold text-sky-500 uppercase tracking-widest">
-                Fast Result
+                 FF RESULT
               </p>
             </div>
           </Link>
