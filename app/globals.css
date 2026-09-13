@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* =========================================================
+   ROOT
+========================================================= */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,9 +12,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/* =========================================================
+   DARK MODE
+========================================================= */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -19,19 +28,32 @@
   }
 }
 
+/* =========================================================
+   BODY
+========================================================= */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
-/* home desing */
+/* =========================================================
+   OLD SCROLL ANIMATION
+========================================================= */
 
 @keyframes scrollText {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -43,30 +65,97 @@ body {
   animation: scrollText 12s linear infinite;
 }
 
+/* =========================================================
+   BLINK
+========================================================= */
+
 @keyframes blink {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }
 }
 
 .blink {
-  display: inline-block; /* IMPORTANT FIX */
+  display: inline-block;
   animation: blink 1s linear infinite;
 }
 
+/* =========================================================
+   LIVE MARQUEE
+========================================================= */
 
-@keyframes live-scroll {
-  0% {
-    transform: translateX(0%);
+@keyframes liveMarquee {
+  from {
+    transform: translate3d(0, 0, 0);
   }
-  100% {
-    transform: translateX(-50%);
+
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-.animate-live-scroll {
-  animation: live-scroll 25s linear infinite;
+.live-marquee-track {
+  display: flex;
+  width: max-content;
+  min-width: 200%;
+  align-items: center;
+
+  animation: liveMarquee 25s linear infinite;
+
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Each copy must have identical width/content */
+.live-marquee-group {
+  display: flex;
+  width: max-content;
+  min-width: 50%;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* =========================================================
+   PAUSE ON HOVER
+========================================================= */
+
+.live-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .live-marquee-track,
+  .animate-scroll,
+  .blink {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   MOBILE SPEED
+========================================================= */
+
+@media (max-width: 640px) {
+  .live-marquee-track {
+    animation-duration: 20s;
+  }
+}
+
+/* =========================================================
+   LARGE SCREEN
+========================================================= */
+
+@media (min-width: 1024px) {
+  .live-marquee-track {
+    animation-duration: 28s;
+  }
 }
