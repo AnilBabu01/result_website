@@ -56,3 +56,17 @@ body {
   display: inline-block; /* IMPORTANT FIX */
   animation: blink 1s linear infinite;
 }
+
+
+@keyframes live-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-live-scroll {
+  animation: live-scroll 25s linear infinite;
+}
