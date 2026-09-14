@@ -8,7 +8,6 @@ import {
   FaDownload,
   FaCalendarAlt,
   FaChevronDown,
-  FaInfoCircle,
   FaShieldAlt,
   FaLightbulb,
   FaArrowRight,
@@ -16,11 +15,11 @@ import {
   FaBolt,
   FaExternalLinkAlt,
   FaExclamationTriangle,
-  FaQuestionCircle,
   FaTrophy,
   FaSearch,
   FaChartLine,
   FaGlobe,
+  FaClock,
 } from "react-icons/fa";
 
 import {
@@ -56,12 +55,28 @@ type HistoryDataItem = {
   results: string[];
 };
 
+type TimeTableSlot = {
+  bazi: string;
+  time: string;
+};
+
 /* =========================================================
    CONSTANTS
 ========================================================= */
 
 const RESULT_NAME = "sikkimff FATAFAT";
 const TOTAL_BAZI = 8; // Applied 8 Bazi limit
+
+const TIME_TABLE: TimeTableSlot[] = [
+  { bazi: "1 Bazi", time: "10:30 am" },
+  { bazi: "2 Bazi", time: "12:00 pm" },
+  { bazi: "3 Bazi", time: "01:30 pm" },
+  { bazi: "4 Bazi", time: "03:00 pm" },
+  { bazi: "5 Bazi", time: "04:30 pm" },
+  { bazi: "6 Bazi", time: "06:00 pm" },
+  { bazi: "7 Bazi", time: "07:30 pm" },
+  { bazi: "8 Bazi", time: "09:00 pm" },
+];
 
 /* =========================================================
    DATE HELPERS
@@ -157,8 +172,7 @@ export default function Home() {
     refetch: () => Promise<any>;
   };
 
-
-  console.log("rawResultData from home",rawResultData);
+  console.log("rawResultData from home", rawResultData);
 
   /* =======================================================
      REFRESH BUTTON HANDLER
@@ -490,6 +504,11 @@ export default function Home() {
         </button>
 
         {/* =================================================
+            SIKKIM FATAFAT TIME TABLE CARD
+        ================================================= */}
+      
+
+        {/* =================================================
             COMMUNITY & DOWNLOAD CTA LINKS
         ================================================= */}
         <div className="w-full grid grid-cols-1 gap-2.5 mb-6">
@@ -601,6 +620,29 @@ export default function Home() {
             </button>
           )}
         </div>
+          <section className="w-full bg-white border border-sky-500 rounded-2xl overflow-hidden shadow-md mb-6">
+          <div className="bg-sky-500 px-4 py-3 text-slate-900 flex items-center justify-center gap-2">
+            <FaClock className="text-white text-base" />
+            <h3 className="font-black text-base uppercase tracking-wide text-amber-50">
+              Sikkim result Time
+            </h3>
+          </div>
+          <div className="divide-y divide-sky-500">
+            {TIME_TABLE.map((slot) => (
+              <div
+                key={slot.bazi}
+                className="flex items-center justify-between px-6 py-2.5 hover:bg-amber-50/50 transition-colors"
+              >
+                <span className="font-semibold text-slate-700 text-xs sm:text-sm">
+                  {slot.bazi}
+                </span>
+                <span className="font-black text-slate-900 text-xs sm:text-sm">
+                  {slot.time}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* =================================================
             sikkimFF INFORMATION SECTION (INTEGRATED)
@@ -623,7 +665,7 @@ export default function Home() {
               Welcome to sikkimFatafat Result
             </h4>
             <p className="text-[11px] text-sky-700 font-medium">
-              sikkimFatafat Today Result ❤️ sikkimFF Result Sabse Pahle Yahi Par Aata Hai ❤️ কলকাতা ফতাফত ❤️ कोलकाता Fatafat Chart Dekho ❤️ Patti Aur Single Ke Sath Chart ❤️
+              sikkimFatafat Today Result ❤️ sikkimFF Result Sabse Pahle Yahi Par Aata Hai ❤️ sikkim ❤️ sikkim Fatafat Chart Dekho ❤️ Patti Aur Single Ke Sath Chart ❤️
             </p>
           </div>
 
