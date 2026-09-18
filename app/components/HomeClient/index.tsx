@@ -27,10 +27,6 @@ import {
   useGetAppDataQuery,
 } from "../../redux/api/apiClient";
 
-/* =========================================================
-   TYPES
-========================================================= */
-
 type ResultItem = {
   id?: number;
   bazi_id: number;
@@ -60,12 +56,8 @@ type TimeTableSlot = {
   time: string;
 };
 
-/* =========================================================
-   CONSTANTS
-========================================================= */
-
 const RESULT_NAME = "sikkimff FATAFAT";
-const TOTAL_BAZI = 8; // Applied 8 Bazi limit
+const TOTAL_BAZI = 8;
 
 const TIME_TABLE: TimeTableSlot[] = [
   { bazi: "1 Bazi", time: "10:30 am" },
@@ -78,35 +70,36 @@ const TIME_TABLE: TimeTableSlot[] = [
   { bazi: "8 Bazi", time: "09:00 pm" },
 ];
 
-/* =========================================================
-   DATE HELPERS
-========================================================= */
-
 function getLocalDateString(): string {
   const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  return [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
 }
 
 function normalizeResultDate(createdAt: string | null | undefined): string {
   if (!createdAt) return "";
+
   const value = String(createdAt).trim();
   if (!value) return "";
 
-  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (match) return `${match[1]}-${match[2]}-${match[3]}`;
+  const iso = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
 
   const ddmmyyyy = value.match(/^(\d{2})[-/](\d{2})[-/](\d{4})/);
-  if (ddmmyyyy) return `${ddmmyyyy[3]}-${ddmmyyyy[2]}-${ddmmyyyy[1]}`;
+  if (ddmmyyyy) {
+    return `${ddmmyyyy[3]}-${ddmmyyyy[2]}-${ddmmyyyy[1]}`;
+  }
 
   const parsed = new Date(value);
   if (!Number.isNaN(parsed.getTime())) {
-    const year = parsed.getFullYear();
-    const month = String(parsed.getMonth() + 1).padStart(2, "0");
-    const day = String(parsed.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return [
+      parsed.getFullYear(),
+      String(parsed.getMonth() + 1).padStart(2, "0"),
+      String(parsed.getDate()).padStart(2, "0"),
+    ].join("-");
   }
 
   return "";
@@ -115,8 +108,7 @@ function normalizeResultDate(createdAt: string | null | undefined): string {
 function formatHistoryDate(dateString: string): string {
   const parts = dateString.split("-");
   if (parts.length !== 3) return dateString;
-  const [year, month, day] = parts;
-  return `${day}/${month}/${year}`;
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
 function getBaziId(item: ResultItem): number {
@@ -126,7 +118,9 @@ function getBaziId(item: ResultItem): number {
 
 function getValue(value: string | null | undefined): string {
   if (!value) return "-";
+
   const cleanValue = String(value).trim();
+
   if (
     !cleanValue ||
     cleanValue.toUpperCase() === "XXX" ||
@@ -134,22 +128,43 @@ function getValue(value: string | null | undefined): string {
   ) {
     return "-";
   }
+
   return cleanValue;
 }
 
-/* =========================================================
-   COMPONENT
-========================================================= */
+function SectionTitle({
+  icon,
+  title,
+  subtitle,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="mb-4 flex items-start gap-3">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-teal-100/70 text-teal-700">
+        {icon}
+      </div>
+      <div>
+        <h2 className="text-sm font-black uppercase tracking-wider text-teal-950">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="mt-0.5 text-[11px] font-bold text-teal-600/80">
+            {subtitle}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const [date, setDate] = useState("");
   const [todayDate, setTodayDate] = useState("");
   const [visibleHistoryCount, setVisibleHistoryCount] = useState(5);
   const [manualRefreshing, setManualRefreshing] = useState(false);
-
-  /* =======================================================
-     APP DATA & RESULT API
-  ======================================================= */
 
   const { data: appData } = useGetAppDataQuery({});
 
@@ -167,17 +182,12 @@ export default function Home() {
     isLoading: boolean;
     isFetching: boolean;
     error: unknown;
-    refetch: () => Promise<any>;
+    refetch: () => Promise<unknown>;
   };
-
-  console.log("rawResultData from home", rawResultData);
-
-  /* =======================================================
-     REFRESH BUTTON HANDLER
-  ======================================================= */
 
   const handleRefresh = async () => {
     if (manualRefreshing) return;
+
     try {
       setManualRefreshing(true);
       await refetch();
@@ -188,13 +198,10 @@ export default function Home() {
     }
   };
 
-  /* =======================================================
-     DATE SYNC
-  ======================================================= */
-
   useEffect(() => {
     const updateDate = () => {
       const now = new Date();
+
       const formattedDate = now.toLocaleDateString("en-GB", {
         day: "numeric",
         month: "short",
@@ -211,13 +218,10 @@ export default function Home() {
     };
 
     updateDate();
+
     const timer = window.setInterval(updateDate, 60000);
     return () => window.clearInterval(timer);
   }, []);
-
-  /* =======================================================
-     RAW RESULTS COMPUTATION
-  ======================================================= */
 
   const results: ResultItem[] = useMemo(() => {
     if (!rawResultData) return [];
@@ -226,68 +230,51 @@ export default function Home() {
     return [];
   }, [rawResultData]);
 
-  /* =======================================================
-     APP LINKS
-  ======================================================= */
-
   const apkUrl = appData?.data?.apk_url || "#";
   const whatsappGroup = appData?.data?.whatsaap_group || "#";
   const telegramChannel = appData?.data?.telegram_channel || "#";
 
-  /* =======================================================
-     TODAY RESULTS (RESTRICTED TO 8 BAZI)
-  ======================================================= */
-
   const todayResults = useMemo(() => {
     if (!todayDate) return [];
+
     return results
       .filter((item) => normalizeResultDate(item.created_at) === todayDate)
-      .sort((a, b) => getBaziId(a) - getBaziId(b));
+      .sort((a, b) => getBaziId(a) - getBaziId(b))
+      .slice(0, TOTAL_BAZI);
   }, [results, todayDate]);
 
-  const hasTodayResult = useMemo(() => todayResults.length > 0, [todayResults]);
+  const hasTodayResult = todayResults.length > 0;
 
-  const todayTableData: TodayTableItem[] = useMemo(() => {
-    // if (!hasTodayResult) {
-    //   return Array.from({ length: TOTAL_BAZI }, (_, index) => ({
-    //     no: index + 1,
-    //     value: "OFF",
-    //     result: "OFF",
-    //   }));
-    // }
-
-    return todayResults.slice(0, TOTAL_BAZI).map((item, index) => ({
-      no: index + 1,
-      value: getValue(item.last_no),
-      result: getValue(item.first_no),
-    }));
-  }, [todayResults, hasTodayResult]);
-
-  /* =======================================================
-     HISTORY DATA (RESTRICTED TO 8 BAZI PER DAY)
-  ======================================================= */
+  const todayTableData: TodayTableItem[] = useMemo(
+    () =>
+      todayResults.map((item, index) => ({
+        no: index + 1,
+        value: getValue(item.last_no),
+        result: getValue(item.first_no),
+      })),
+    [todayResults]
+  );
 
   const historyData: HistoryDataItem[] = useMemo(() => {
-    const historyGrouped: Record<string, ResultItem[]> = {};
+    const grouped: Record<string, ResultItem[]> = {};
 
     results.forEach((item) => {
       const resultDate = normalizeResultDate(item.created_at);
+
       if (!resultDate || resultDate === todayDate) return;
 
-      if (!historyGrouped[resultDate]) {
-        historyGrouped[resultDate] = [];
-      }
-      historyGrouped[resultDate].push(item);
+      if (!grouped[resultDate]) grouped[resultDate] = [];
+      grouped[resultDate].push(item);
     });
 
-    return Object.keys(historyGrouped)
+    return Object.keys(grouped)
       .sort(
         (a, b) =>
           new Date(`${b}T00:00:00`).getTime() -
-          new Date(`${a}T00:00:00`).getTime(),
+          new Date(`${a}T00:00:00`).getTime()
       )
       .map((dateStr) => {
-        const dayData = historyGrouped[dateStr]
+        const dayData = grouped[dateStr]
           .sort((a, b) => getBaziId(a) - getBaziId(b))
           .slice(0, TOTAL_BAZI);
 
@@ -299,454 +286,502 @@ export default function Home() {
       });
   }, [results, todayDate]);
 
-  /* =======================================================
-     LOADING STATE
-  ======================================================= */
+  const renderGridBoard = (
+    values: string[],
+    resultsList: string[],
+    compact = false
+  ) => (
+    <div className="overflow-x-auto">
+      <div className="min-w-[620px]">
+        <div className="grid grid-cols-8 border-b border-teal-100/60 bg-teal-50/50">
+          {Array.from({ length: TOTAL_BAZI }, (_, i) => (
+            <div
+              key={`head-${i}`}
+              className="border-r border-teal-100/60 px-1 py-2 text-center text-[9px] font-black uppercase tracking-wider text-teal-700 last:border-r-0 sm:text-[10px]"
+            >
+              Bazi {i + 1}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-8 border-b border-teal-100/60 bg-white">
+          {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+            const val = values[i] || "-";
+            return (
+              <div
+                key={`value-${i}`}
+                className="border-r border-teal-100/60 px-1 py-3 text-center last:border-r-0"
+              >
+                <span
+                  className={`font-black ${
+                    compact
+                      ? "text-base sm:text-lg"
+                      : "text-lg sm:text-xl"
+                  } ${
+                    val === "OFF" ? "text-rose-500" : "text-teal-950"
+                  }`}
+                >
+                  {val}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-8 bg-gradient-to-b from-white to-sky-50/60">
+          {Array.from({ length: TOTAL_BAZI }, (_, i) => {
+            const result = resultsList[i] || "-";
+            return (
+              <div
+                key={`result-${i}`}
+                className="border-r border-teal-100/60 px-1 py-3 text-center last:border-r-0"
+              >
+                <span
+                  className={`font-black ${
+                    compact
+                      ? "text-base sm:text-lg"
+                      : "text-xl sm:text-2xl"
+                  } ${
+                    result === "OFF" ? "text-rose-500" : "text-sky-700"
+                  }`}
+                >
+                  {result}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 
   if (resultLoading) {
     return (
-      <div className="min-h-screen bg-sky-50 flex flex-col items-center justify-center text-sky-900">
-        <div className="relative flex items-center justify-center">
-          <div className="h-16 w-16 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600" />
-          <FaBolt className="absolute text-sky-600 text-lg animate-pulse" />
+      <main className="flex min-h-screen items-center justify-center bg-teal-50/30 px-5">
+        <div className="w-full max-w-sm rounded-[2rem] border border-teal-100 bg-white p-8 text-center shadow-xl shadow-teal-100/50">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-teal-50">
+            <div className="absolute h-14 w-14 animate-spin rounded-full border-4 border-teal-100 border-t-teal-600" />
+            <FaBolt className="text-teal-600 text-xl" />
+          </div>
+          <h2 className="mt-5 text-lg font-black text-teal-950">
+            Loading Live Results
+          </h2>
+          <p className="mt-1 text-xs font-bold text-teal-600/70">
+            Connecting to the latest result data...
+          </p>
         </div>
-        <p className="mt-4 font-bold text-sky-700 tracking-wider text-xs uppercase">
-          Loading Live Data...
-        </p>
-      </div>
+      </main>
     );
   }
-
-  /* =======================================================
-     ERROR STATE
-  ======================================================= */
 
   if (resultError) {
     return (
-      <div className="min-h-screen bg-sky-50 flex items-center justify-center px-4">
-        <div className="bg-white border border-sky-100 rounded-3xl p-8 text-center max-w-md w-full shadow-xl shadow-sky-100/50">
-          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-4 border border-red-100">
-            <FaExclamationTriangle />
+      <main className="flex min-h-screen items-center justify-center bg-teal-50/30 px-5">
+        <div className="w-full max-w-md rounded-[2rem] border border-rose-100 bg-white p-8 text-center shadow-xl shadow-rose-100/40">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 text-rose-500">
+            <FaExclamationTriangle className="text-xl" />
           </div>
-          <h2 className="text-xl font-black text-slate-800 mb-1">
-            Connection Lost
+
+          <h2 className="mt-5 text-xl font-black text-teal-950">
+            Connection Problem
           </h2>
-          <p className="text-slate-500 text-xs mb-6">
-            Unable to fetch data from the server. Please check your internet
-            connection.
+
+          <p className="mt-2 text-xs font-bold leading-5 text-teal-700/70">
+            We could not fetch the latest result data. Please try again.
           </p>
+
           <button
             onClick={handleRefresh}
             disabled={manualRefreshing}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 hover:bg-sky-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-sky-500/30 active:scale-95 transition disabled:opacity-60"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-600 px-5 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-teal-200 transition hover:bg-teal-700 active:scale-[0.98] disabled:opacity-60"
           >
             <FaSyncAlt className={manualRefreshing ? "animate-spin" : ""} />
-            {manualRefreshing ? "Retrying..." : "Retry Connection"}
+            {manualRefreshing ? "Retrying..." : "Try Again"}
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
-  /* =======================================================
-     GRID BOARD RENDERER (8 BAZI GRID SYSTEM)
-  ======================================================= */
-
-  const renderGridBoard = (values: string[], resultsList: string[]) => {
-    return (
-      <div className="w-full overflow-x-auto">
-        <div className="min-w-full">
-          {/* Header Rounds Indicator - 8 Columns */}
-          <div className="grid grid-cols-8 bg-sky-100/80 border-b border-sky-200 text-[10px] sm:text-xs font-extrabold text-sky-800 text-center py-1.5">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => (
-              <div key={`head-${i}`}>BAZI-{i + 1}</div>
-            ))}
-          </div>
-
-          {/* Values Row (Patti/Last No) */}
-          <div className="grid grid-cols-8 w-full bg-white border-b border-sky-100">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-              const val = values[i] || "-";
-              const isOff = val === "OFF";
-              return (
-                <div
-                  key={`val-${i}`}
-                  className={`py-2 px-0.5 text-center text-[25px] sm:text-xs font-semibold border-r last:border-r-0 border-sky-100/60 ${
-                    isOff ? "text-rose-500 font-bold" : "text-black"
-                  }`}
-                >
-                  <p className="text-black text-[15px]">{val}</p>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Results Row (Single/First No) */}
-          <div className="grid grid-cols-8 w-full bg-sky-50/40">
-            {Array.from({ length: TOTAL_BAZI }, (_, i) => {
-              const res = resultsList[i] || "-";
-              const isOff = res === "OFF";
-              return (
-                <div
-                  key={`res-${i}`}
-                  className={`py-2.5 px-0.5 text-center text-xs sm:text-sm font-black border-r last:border-r-0 border-sky-100/60 ${
-                    isOff ? "text-rose-500" : "text-sky-950"
-                  }`}
-                >
-                  <p>{res}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  /* =======================================================
-     MAIN LAYOUT
-  ======================================================= */
-
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-700 font-sans antialiased pb-16">
-      {/* Top Bar Refresh Notification */}
+    <main className="min-h-screen bg-[#f0fdfa] font-sans text-teal-900 antialiased">
       {(manualRefreshing || resultFetching) && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-sky-600 text-white px-4 py-2 text-xs font-bold shadow-md flex items-center justify-center gap-2 animate-pulse">
-          <FaSyncAlt className="animate-spin text-white" />
-          <span>Syncing real-time updates...</span>
+        <div className="fixed left-0 right-0 top-0 z-[100] bg-teal-700 px-4 py-2 text-center text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+          <span className="inline-flex items-center gap-2">
+            <FaSyncAlt className="animate-spin" />
+            Updating live results...
+          </span>
         </div>
       )}
 
-      {/* Hero Header */}
-      <header className="bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/10 sticky top-0 z-40">
-        <div className="max-w-md mx-auto px-4 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-black text-sm shadow-inner border border-white/20">
-              <FaBolt className="text-yellow-300" />
+      <header className="relative overflow-hidden bg-white">
+        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-teal-100/60 blur-2xl" />
+        <div className="absolute -left-20 top-20 h-40 w-40 rounded-full bg-cyan-100/60 blur-2xl" />
+
+        <div className="relative mx-auto max-w-2xl px-4 pb-5 pt-5 sm:px-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-200">
+                <FaBolt className="text-lg" />
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg font-black tracking-tight text-teal-950 sm:text-xl">
+                    Sikkim Fatafat
+                  </h1>
+                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-[8px] font-black uppercase tracking-wider text-emerald-600">
+                    Live
+                  </span>
+                </div>
+                <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-teal-600">
+                  Today Result • 8 Bazi
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="font-black tracking-wide text-white text-base sm:text-lg leading-tight">
-                Sikkim Fatafat
-              </h1>
-              <span className="text-[10px] font-extrabold tracking-widest text-sky-100 uppercase block -mt-0.5">
-                Fatafat Live (8 Bazi)
+
+            <button
+              onClick={handleRefresh}
+              disabled={manualRefreshing || resultFetching}
+              aria-label="Refresh results"
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-teal-100 bg-teal-50/50 text-teal-700 transition hover:bg-teal-100/60 active:scale-95 disabled:opacity-50 sm:h-auto sm:w-auto sm:px-4 sm:py-2.5"
+            >
+              <FaSyncAlt
+                className={
+                  manualRefreshing || resultFetching ? "animate-spin" : ""
+                }
+              />
+              <span className="ml-2 hidden text-xs font-black sm:inline">
+                Refresh
               </span>
+            </button>
+          </div>
+
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            <div className="rounded-2xl bg-teal-50/80 p-3">
+              <p className="text-[8px] font-black uppercase tracking-widest text-teal-500">
+                Status
+              </p>
+              <p className="mt-1 text-xs font-black text-teal-900">
+                {hasTodayResult ? "Live Data" : "Waiting"}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-cyan-50/80 p-3">
+              <p className="text-[8px] font-black uppercase tracking-widest text-cyan-600">
+                Rounds
+              </p>
+              <p className="mt-1 text-xs font-black text-cyan-900">8 Bazi</p>
+            </div>
+            <div className="rounded-2xl bg-emerald-50/80 p-3">
+              <p className="text-[8px] font-black uppercase tracking-widest text-emerald-600">
+                Updates
+              </p>
+              <p className="mt-1 text-xs font-black text-emerald-900">60 sec</p>
             </div>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={manualRefreshing || resultFetching}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-xs font-bold text-white backdrop-blur-md active:scale-95 transition disabled:opacity-50"
-          >
-            <FaSyncAlt
-              className={`${
-                manualRefreshing || resultFetching ? "animate-spin" : ""
-              }`}
-            />
-            <span className="hidden sm:inline">Refresh</span>
-          </button>
         </div>
       </header>
 
-      <div className="max-w-md mx-auto px-3.5 pt-4 flex flex-col items-center">
-        {/* =================================================
-            LIVE / TODAY RESULT CARD (8 BAZI)
-        ================================================= */}
-        <section className="w-full bg-white border border-sky-100 rounded-2xl overflow-hidden shadow-xl shadow-sky-500/5 mb-4">
-          {/* Card Banner Header */}
-          <div className="bg-gradient-to-r from-sky-500 to-cyan-500 p-3.5 text-white flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400 border-2 border-white"></span>
-              </span>
-              <span className="text-xs font-black uppercase tracking-wider">
-                Live Today Board (8 Bazi)
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 text-[11px] font-bold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
-              <FaCalendarAlt className="text-sky-100" />
-              <span>{date || "LOADING..."}</span>
+      <div className="mx-auto max-w-2xl space-y-5 px-3 pb-14 pt-4 sm:px-6">
+        <section className="overflow-hidden rounded-[1.7rem] border border-teal-100 bg-white shadow-xl shadow-teal-900/5">
+          <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-4 text-white sm:px-5">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-300 ring-4 ring-white/20" />
+                  <p className="text-xs font-black uppercase tracking-wider">
+                    Today Live Board
+                  </p>
+                </div>
+                <p className="mt-1 text-[10px] font-medium text-teal-100">
+                  Sikkim Fatafat • {TOTAL_BAZI} rounds
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-white/15 px-3 py-2 text-right backdrop-blur">
+                <div className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wide text-teal-100">
+                  <FaCalendarAlt />
+                  Date
+                </div>
+                <p className="mt-0.5 text-[10px] font-black text-white">
+                  {date || "LOADING..."}
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Grid Render */}
           {renderGridBoard(
-            todayTableData.map((i) => i.value),
-            todayTableData.map((i) => i.result),
+            todayTableData.map((item) => item.value),
+            todayTableData.map((item) => item.result)
           )}
 
-          {/* OFF Notice if no records */}
           {!hasTodayResult && (
-            <div className="text-center py-2.5 bg-rose-50 border-t border-rose-100 text-rose-600 font-bold text-[11px] uppercase tracking-wider">
-              Today's Draws are Currently Closed
+            <div className="flex items-center justify-center gap-2 border-t border-rose-100 bg-rose-50 px-4 py-3 text-[10px] font-black uppercase tracking-wider text-rose-600">
+              <FaClock />
+              Today&apos;s draws are currently closed
             </div>
           )}
         </section>
 
-        {/* Action Button: Quick Refresh */}
         <button
           onClick={handleRefresh}
           disabled={manualRefreshing || resultFetching}
-          className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-2xl shadow-lg shadow-sky-500/25 border border-sky-400 flex items-center justify-center gap-2 mb-5 active:scale-[0.98] transition disabled:opacity-60 cursor-pointer"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-600 px-4 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-teal-200 transition hover:bg-teal-700 active:scale-[0.99] disabled:opacity-60"
         >
           <FaSyncAlt
             className={manualRefreshing || resultFetching ? "animate-spin" : ""}
           />
-          <span>
-            {manualRefreshing || resultFetching
-              ? "FETCHING LATEST DRAW..."
-              : "REFRESH LIVE BOARD"}
-          </span>
+          {manualRefreshing || resultFetching
+            ? "Fetching Latest Draw"
+            : "Refresh Live Board"}
         </button>
 
-        {/* =================================================
-            SIKKIM FATAFAT TIME TABLE CARD
-        ================================================= */}
+        <section>
+          <SectionTitle
+            icon={<FaClock />}
+            title="Sikkim Result Time"
+            subtitle="Scheduled timing for all 8 Bazi rounds"
+          />
 
-        {/* =================================================
-            COMMUNITY & DOWNLOAD CTA LINKS
-        ================================================= */}
-        <div className="w-full grid grid-cols-1 gap-2.5 mb-6">
-          {apkUrl !== "#" && (
-            <a
-              href={apkUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center text-white text-base">
-                  <FaDownload />
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase font-bold text-indigo-200 tracking-wider">
-                    Official Mobile Application
-                  </div>
-                  <div className="text-xs font-black">Download Android APK</div>
-                </div>
-              </div>
-              <FaExternalLinkAlt className="text-xs opacity-70 group-hover:translate-x-0.5 transition" />
-            </a>
-          )}
-
-          {whatsappGroup !== "#" && (
-            <a
-              href={whatsappGroup}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white text-lg">
-                  <FaWhatsapp />
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase font-bold text-emerald-100 tracking-wider">
-                    Instant Updates
-                  </div>
-                  <div className="text-xs font-black">
-                    Join WhatsApp Community
-                  </div>
-                </div>
-              </div>
-              <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
-            </a>
-          )}
-
-          {telegramChannel !== "#" && (
-            <a
-              href={telegramChannel}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-sky-500 hover:bg-sky-600 text-white rounded-2xl p-3.5 flex items-center justify-between shadow-md transition group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white text-lg">
-                  <FaTelegramPlane />
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase font-bold text-sky-100 tracking-wider">
-                    Official Feed
-                  </div>
-                  <div className="text-xs font-black">
-                    Join Telegram Channel
-                  </div>
-                </div>
-              </div>
-              <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
-            </a>
-          )}
-        </div>
-
-        {/* =================================================
-            PREVIOUS RESULTS HISTORY (8 BAZI)
-        ================================================= */}
-        <div className="w-full mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px bg-sky-200/60 flex-1" />
-            <h2 className="text-xs font-black text-sky-900 uppercase tracking-widest flex items-center gap-1.5">
-              <FaHistory className="text-sky-500" />
-              Past Draw History (8 Bazi)
-            </h2>
-            <div className="h-px bg-sky-200/60 flex-1" />
-          </div>
-
-          <div className="w-full space-y-3.5">
-            {historyData.slice(0, visibleHistoryCount).map((history) => (
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {TIME_TABLE.map((slot, index) => (
               <div
-                key={history.date}
-                className="w-full bg-white rounded-2xl border border-sky-100 overflow-hidden shadow-sm"
+                key={slot.bazi}
+                className="group rounded-2xl border border-teal-100/70 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-md"
               >
-                <div className="bg-sky-100/60 px-3 py-2 text-center border-b border-sky-100 flex items-center justify-center gap-1.5">
-                  <FaCalendarAlt className="text-sky-600 text-xs" />
-                  <span className="text-xs font-extrabold text-sky-900 tracking-wider">
-                    DATE: {history.date}
+                <div className="flex items-center justify-between">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-teal-50 text-[9px] font-black text-teal-700">
+                    {index + 1}
                   </span>
+                  <FaClock className="text-[10px] text-teal-300" />
                 </div>
-                {renderGridBoard(history.values, history.results)}
+                <p className="mt-2 text-[10px] font-bold text-teal-600/70">
+                  {slot.bazi}
+                </p>
+                <p className="mt-0.5 text-xs font-black text-teal-950">
+                  {slot.time}
+                </p>
               </div>
             ))}
           </div>
+        </section>
 
-          {/* Load More Button */}
+        {(apkUrl !== "#" ||
+          whatsappGroup !== "#" ||
+          telegramChannel !== "#") && (
+          <section>
+            <SectionTitle
+              icon={<FaArrowRight />}
+              title="Quick Links"
+              subtitle="Stay connected and get updates"
+            />
+
+            <div className="grid gap-2.5 sm:grid-cols-3">
+              {apkUrl !== "#" && (
+                <a
+                  href={apkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-2xl bg-gradient-to-br from-teal-600 to-cyan-700 p-4 text-white shadow-lg shadow-teal-100 transition hover:-translate-y-0.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15">
+                      <FaDownload />
+                    </div>
+                    <FaExternalLinkAlt className="text-[9px] opacity-70" />
+                  </div>
+                  <p className="mt-3 text-[9px] font-bold uppercase tracking-wider text-teal-100">
+                    Official App
+                  </p>
+                  <p className="mt-1 text-xs font-black">Download APK</p>
+                </a>
+              )}
+
+              {whatsappGroup !== "#" && (
+                <a
+                  href={whatsappGroup}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 p-4 text-white shadow-lg shadow-emerald-100 transition hover:-translate-y-0.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-lg">
+                      <FaWhatsapp />
+                    </div>
+                    <FaArrowRight className="text-[9px] opacity-70" />
+                  </div>
+                  <p className="mt-3 text-[9px] font-bold uppercase tracking-wider text-emerald-100">
+                    Instant Updates
+                  </p>
+                  <p className="mt-1 text-xs font-black">WhatsApp Group</p>
+                </a>
+              )}
+
+              {telegramChannel !== "#" && (
+                <a
+                  href={telegramChannel}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-2xl bg-gradient-to-br from-cyan-500 to-sky-700 p-4 text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-lg">
+                      <FaTelegramPlane />
+                    </div>
+                    <FaArrowRight className="text-[9px] opacity-70" />
+                  </div>
+                  <p className="mt-3 text-[9px] font-bold uppercase tracking-wider text-cyan-100">
+                    Official Feed
+                  </p>
+                  <p className="mt-1 text-xs font-black">Telegram Channel</p>
+                </a>
+              )}
+            </div>
+          </section>
+        )}
+
+        <section>
+          <SectionTitle
+            icon={<FaHistory />}
+            title="Past Draw History"
+            subtitle="Previous result charts • 8 Bazi per day"
+          />
+
+          <div className="space-y-3">
+            {historyData.slice(0, visibleHistoryCount).map((history) => (
+              <article
+                key={history.date}
+                className="overflow-hidden rounded-[1.5rem] border border-teal-100/80 bg-white shadow-sm"
+              >
+                <div className="flex items-center justify-between border-b border-teal-100/60 bg-gradient-to-r from-teal-50/50 to-cyan-50/50 px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-teal-600 shadow-sm">
+                      <FaCalendarAlt className="text-xs" />
+                    </div>
+                    <div>
+                      <p className="text-[8px] font-black uppercase tracking-widest text-teal-500">
+                        Previous Date
+                      </p>
+                      <p className="text-xs font-black text-teal-950">
+                        {history.date}
+                      </p>
+                    </div>
+                  </div>
+
+                  <span className="rounded-full bg-white px-2.5 py-1 text-[8px] font-black text-teal-700 shadow-sm">
+                    8 BAZI
+                  </span>
+                </div>
+
+                {renderGridBoard(
+                  history.values,
+                  history.results,
+                  true
+                )}
+              </article>
+            ))}
+
+            {historyData.length === 0 && (
+              <div className="rounded-2xl border border-teal-100 bg-white p-6 text-center">
+                <FaHistory className="mx-auto text-teal-200 text-2xl" />
+                <p className="mt-2 text-xs font-bold text-teal-600/60">
+                  No previous result history available.
+                </p>
+              </div>
+            )}
+          </div>
+
           {visibleHistoryCount < historyData.length && (
             <button
               onClick={() => setVisibleHistoryCount((prev) => prev + 5)}
-              className="mt-4 w-full bg-sky-100/80 hover:bg-sky-200/70 text-sky-900 border border-sky-200/60 font-black text-xs py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 active:scale-95"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-teal-100 bg-white px-4 py-3.5 text-[10px] font-black uppercase tracking-widest text-teal-700 shadow-sm transition hover:bg-teal-50/50 active:scale-[0.99]"
             >
-              <span>LOAD PREVIOUS DATES</span>
-              <FaChevronDown className="text-sky-600" />
+              Load Previous Dates
+              <FaChevronDown />
             </button>
           )}
-        </div>
-        <section className="w-full bg-white border border-sky-500 rounded-2xl overflow-hidden shadow-md mb-6">
-          <div className="bg-sky-500 px-4 py-3 text-slate-900 flex items-center justify-center gap-2">
-            <FaClock className="text-white text-base" />
-            <h3 className="font-black text-base uppercase tracking-wide text-amber-50">
-              Sikkim result Time
-            </h3>
-          </div>
-          <div className="divide-y divide-sky-500">
-            {TIME_TABLE.map((slot) => (
-              <div
-                key={slot.bazi}
-                className="flex items-center justify-between px-6 py-2.5 hover:bg-amber-50/50 transition-colors"
-              >
-                <span className="font-semibold text-slate-700 text-xs sm:text-sm">
-                  {slot.bazi}
-                </span>
-                <span className="font-black text-slate-900 text-xs sm:text-sm">
-                  {slot.time}
-                </span>
-              </div>
-            ))}
-          </div>
         </section>
 
-        {/* =================================================
-            sikkimFF INFORMATION SECTION (INTEGRATED)
-        ================================================= */}
-        <section className="w-full bg-white border border-sky-100 rounded-2xl p-5 space-y-5 text-slate-600 text-xs shadow-sm mb-6">
-          {/* Header Banner */}
-          <div className="border-b border-sky-100 pb-3">
-            <h3 className="text-sky-950 font-black text-base sm:text-lg mb-1 flex items-center gap-2">
-              <FaGlobe className="text-sky-500" />
-              What is sikkimFF (Fatafat)?
-            </h3>
-            <p className="text-slate-500 text-xs leading-relaxed">
-              This is the premier portal for fast sikkimFF Fatafat results.
-              Access today’s live results alongside historical old charts online
-              free of cost.
-            </p>
-          </div>
+        <section className="overflow-hidden rounded-[1.7rem] border border-teal-100 bg-white shadow-sm">
+          <div className="bg-gradient-to-r from-teal-50/30 via-white to-cyan-50/30 p-5">
+            <SectionTitle
+              icon={<FaGlobe />}
+              title="About Sikkim Fatafat"
+              subtitle="Live result information and historical records"
+            />
 
-          {/* Welcome Highlight */}
-          <div className="bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-100 rounded-xl p-3.5 text-center">
-            <h4 className="font-extrabold text-sky-900 text-sm mb-1">
-              Welcome to sikkimFatafat Result
-            </h4>
-            <p className="text-[11px] text-sky-700 font-medium">
-              sikkimFatafat Today Result ❤️ sikkimFF Result Sabse Pahle Yahi Par
-              Aata Hai ❤️ sikkim ❤️ sikkim Fatafat Chart Dekho ❤️ Patti Aur
-              Single Ke Sath Chart ❤️
-            </p>
-          </div>
+            <div className="rounded-2xl border border-teal-100/70 bg-white p-4">
+              <h3 className="text-sm font-black text-teal-950">
+                Welcome to SikkimFatafat Result
+              </h3>
+              <p className="mt-2 text-[11px] font-medium leading-5 text-teal-800/80">
+                Check today&apos;s Sikkim Fatafat results together with
+                previous result charts in a simple mobile-friendly format.
+              </p>
+            </div>
 
-          {/* Detailed Content Grid */}
-          <div className="space-y-4">
-            {/* Overview & Gameplay */}
-            <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-2xs">
-              <h4 className="text-slate-800 font-black text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-teal-100/60 bg-teal-50/40 p-4">
                 <FaTrophy className="text-amber-500" />
-                sikkimFF Result & Satta Game
-              </h4>
-              <p className="leading-relaxed text-slate-500 text-[11px]">
-                Satta games are played across the country, with significant
-                participation from sikkim government and nearby states. The game
-                operates on guessing numbers where participants put forward an
-                amount to win a prespecified reward. Correct guesses yield major
-                payouts, whereas incorrect entries lose the invested amount.
-                Results on this portal update **8 times a day (8 Bazi)**.
-              </p>
-            </div>
+                <h3 className="mt-2 text-xs font-black uppercase tracking-wide text-teal-950">
+                  Result Information
+                </h3>
+                <p className="mt-1.5 text-[10px] font-medium leading-5 text-teal-800/80">
+                  This portal displays available result records and organizes
+                  them by Bazi and date for easier reference.
+                </p>
+              </div>
 
-            {/* Free Tips Notice */}
-            <div className="bg-amber-50/70 p-3.5 rounded-xl border border-amber-200/60">
-              <h4 className="text-amber-900 font-bold text-xs mb-1 flex items-center gap-1.5">
-                <FaLightbulb className="text-amber-600" />
-                Free sikkimFF Tips & Fraud Warning
-              </h4>
-              <p className="leading-relaxed text-amber-800/90 text-[11px]">
-                Many sources on social platforms promise guaranteed numbers for
-                money. Note that no guaranteed trick exists; the game depends on
-                individual calculation and luck. Reviewing **sikkimFF Old
-                Results** can assist in forming numerical estimates. Avoid
-                paying third parties for fake outcome predictions.
-              </p>
-            </div>
+              <div className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4">
+                <FaLightbulb className="text-amber-500" />
+                <h3 className="mt-2 text-xs font-black uppercase tracking-wide text-amber-900">
+                  Safety Notice
+                </h3>
+                <p className="mt-1.5 text-[10px] font-medium leading-5 text-amber-800/90">
+                  No number prediction or guaranteed outcome is provided.
+                  Avoid paying third parties for claims of guaranteed results.
+                </p>
+              </div>
 
-            {/* How to Find Results */}
-            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60">
-              <h4 className="text-slate-900 font-bold text-xs mb-1.5 flex items-center gap-1.5">
-                <FaSearch className="text-sky-600" />
-                How to Check Today's sikkimFF Result
-              </h4>
-              <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-600 font-medium">
-                <li>Open this live portal home page.</li>
-                <li>Locate today’s active Bazi round (1 to 8).</li>
-                <li>
-                  Verify your number under the specific Bazi column to check
-                  winning status.
-                </li>
-              </ol>
-            </div>
+              <div className="rounded-2xl border border-cyan-100/60 bg-cyan-50/40 p-4">
+                <FaSearch className="text-cyan-600" />
+                <h3 className="mt-2 text-xs font-black uppercase tracking-wide text-teal-950">
+                  How to Check
+                </h3>
+                <ol className="mt-1.5 list-decimal space-y-1 pl-4 text-[10px] font-medium leading-4 text-teal-800/80">
+                  <li>Open the live result board.</li>
+                  <li>Find the required Bazi column.</li>
+                  <li>Check the displayed result value.</li>
+                </ol>
+              </div>
 
-            {/* Old Result & Online Accessibility */}
-            <div className="bg-sky-50/50 p-3.5 rounded-xl border border-sky-100 space-y-2">
-              <h4 className="text-sky-950 font-bold text-xs flex items-center gap-1.5">
-                <FaChartLine className="text-sky-500" />
-                Online Play & Previous Records
-              </h4>
-              <p className="leading-relaxed text-slate-500 text-[11px]">
-                Historically played offline, modern developments allow players
-                to follow calculations and track sikkim results via mobile
-                devices and online interfaces. Our record table provides
-                comprehensive multi-day historical charts for verification.
-              </p>
+              <div className="rounded-2xl border border-teal-100/60 bg-sky-50/40 p-4">
+                <FaChartLine className="text-teal-600" />
+                <h3 className="mt-2 text-xs font-black uppercase tracking-wide text-teal-950">
+                  Previous Records
+                </h3>
+                <p className="mt-1.5 text-[10px] font-medium leading-5 text-teal-800/80">
+                  Historical charts are grouped by date and limited to the
+                  first 8 Bazi records for each day.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Standard Information Notice */}
-          <div className="border-t border-slate-100 pt-3 flex items-start gap-2 text-slate-400 text-[10px]">
-            <FaShieldAlt className="text-slate-400 text-xs mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2 border-t border-teal-100/60 bg-white px-5 py-4 text-[9px] font-medium leading-4 text-teal-700/60">
+            <FaShieldAlt className="mt-0.5 shrink-0 text-teal-400" />
             <p>
-              Information provided is for tracking, historical records, and
-              analytical purposes. Always play responsibly and check local
-              regulations.
+              Information is provided for tracking and historical reference.
+              Always play responsibly and follow applicable local regulations.
             </p>
           </div>
         </section>
+
+        <footer className="pb-2 text-center">
+          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-teal-600/40">
+            Sikkim Fatafat • Live Result Board
+          </p>
+        </footer>
       </div>
     </main>
   );

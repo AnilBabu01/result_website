@@ -10,87 +10,152 @@ export default function LiveBar() {
   ];
 
   return (
-    <div className="mt-25 w-full px-3 sm:px-6">
-      <div className="relative flex w-full items-center overflow-hidden rounded-full border border-sky-300/80 bg-gradient-to-r from-sky-500/10 via-cyan-400/10 to-blue-500/10 shadow-[0_4px_25px_rgba(56,189,248,0.25)] backdrop-blur-md dark:bg-slate-900/80">
+    <section className="mt-25 w-full px-3 sm:px-6">
+      <div className="mx-auto flex w-full max-w-7xl overflow-hidden rounded-2xl border border-sky-200 bg-white shadow-[0_8px_30px_rgba(14,165,233,0.12)] dark:border-slate-700 dark:bg-slate-950">
 
-        {/* ================= LIVE BADGE ================= */}
-        <div className="relative z-20 flex shrink-0 items-center gap-2.5 rounded-r-full bg-gradient-to-r from-sky-600 to-blue-600 px-4 py-3 shadow-[4px_0_15px_rgba(14,165,233,0.4)] sm:px-5">
+        {/* ================= LEFT STATUS ================= */}
+        <div className="relative z-20 flex shrink-0 items-center gap-3 bg-slate-950 px-4 py-3 sm:px-6 dark:bg-sky-950">
           
-          {/* Pulse */}
-          <span className="relative flex h-3 w-3 shrink-0">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-300 opacity-80" />
+          {/* Live Icon */}
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/20">
+            <span className="absolute h-3 w-3 animate-ping rounded-full bg-red-400 opacity-60" />
+            <span className="relative h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.9)]" />
+          </div>
 
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-cyan-200 shadow-[0_0_8px_rgba(165,243,252,0.8)]" />
-          </span>
+          <div className="leading-none">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-300">
+              Status
+            </p>
 
-          <span className="text-xs font-black uppercase tracking-widest text-white drop-shadow">
-            LIVE
-          </span>
+            <p className="mt-1 text-sm font-black tracking-wider text-white">
+              LIVE
+            </p>
+          </div>
         </div>
 
-        {/* ================= MARQUEE ================= */}
-        <div className="relative min-w-0 flex-1 overflow-hidden">
-          
+        {/* ================= TICKER ================= */}
+        <div className="relative min-w-0 flex-1 overflow-hidden bg-gradient-to-r from-sky-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
+
           {/* Left fade */}
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-10 bg-gradient-to-r from-white via-white/80 to-transparent dark:from-slate-900 dark:via-slate-900/80 sm:w-16" />
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-sky-50 to-transparent dark:from-slate-900 sm:w-20" />
 
           {/* Right fade */}
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-white via-white/80 to-transparent dark:from-slate-900 dark:via-slate-900/80 sm:w-16" />
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-cyan-50 to-transparent dark:from-slate-900 sm:w-20" />
 
-          {/* Moving track */}
-          <div className="live-marquee-track flex w-max items-center py-3 text-sm font-semibold text-sky-950 dark:text-sky-100">
+          {/* Moving Content */}
+          <div className="live-marquee-track flex min-w-max items-center py-3.5">
 
-            {/* First copy */}
-            <div className="flex shrink-0 items-center">
+            {/* First set */}
+            <div className="flex items-center">
               {marqueeItems.map((item, index) => (
-                <span
+                <div
                   key={`first-${index}`}
                   className="flex shrink-0 items-center"
                 >
-                  <span className="mx-5 whitespace-nowrap tracking-wide sm:mx-6">
+                  <span className="mx-5 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-200 sm:mx-7">
                     {item}
                   </span>
 
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 shadow-[0_0_6px_rgba(56,189,248,0.8)]" />
-                </span>
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.7)]" />
+                </div>
               ))}
             </div>
 
-            {/* Second copy - required for seamless loop */}
+            {/* Second set */}
             <div
-              className="flex shrink-0 items-center"
+              className="flex items-center"
               aria-hidden="true"
             >
               {marqueeItems.map((item, index) => (
-                <span
+                <div
                   key={`second-${index}`}
                   className="flex shrink-0 items-center"
                 >
-                  <span className="mx-5 whitespace-nowrap tracking-wide sm:mx-6">
+                  <span className="mx-5 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-200 sm:mx-7">
                     {item}
                   </span>
 
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 shadow-[0_0_6px_rgba(56,189,248,0.8)]" />
-                </span>
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.7)]" />
+                </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* ================= AUTO REFRESH ================= */}
-        <div className="relative z-20 hidden shrink-0 items-center gap-2 border-l border-sky-200/60 px-5 py-3 dark:border-sky-800/50 sm:flex">
-          
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+        {/* ================= RIGHT UPDATE STATUS ================= */}
+        <div className="relative z-20 hidden shrink-0 items-center gap-3 border-l border-sky-100 bg-white px-5 dark:border-slate-700 dark:bg-slate-950 sm:flex">
 
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-sky-500" />
-          </span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-50 dark:bg-sky-500/10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 text-sky-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 4v5h5M20 20v-5h-5M5.64 18.36A9 9 0 0118.36 5.64M18.36 18.36A9 9 0 015.64 5.64"
+              />
+            </svg>
+          </div>
 
-          <span className="whitespace-nowrap text-xs font-black tracking-wider text-sky-700 dark:text-sky-300">
-            AUTO-REFRESH
-          </span>
+          <div className="leading-none">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
+              Results
+            </p>
+
+            <p className="mt-1 whitespace-nowrap text-xs font-extrabold text-sky-600 dark:text-sky-400">
+              AUTO UPDATED
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* ================= MOBILE UPDATE LABEL ================= */}
+      <div className="mt-2 flex items-center justify-center gap-2 sm:hidden">
+        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-sky-500" />
+
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+          Results Auto Updated
+        </span>
+      </div>
+
+      {/* ================= MARQUEE ANIMATION ================= */}
+      <style jsx>{`
+        .live-marquee-track {
+          animation: liveMarquee 28s linear infinite;
+          will-change: transform;
+        }
+
+        .live-marquee-track:hover {
+          animation-play-state: paused;
+        }
+
+        @keyframes liveMarquee {
+          from {
+            transform: translateX(0);
+          }
+
+          to {
+            transform: translateX(-50%);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .live-marquee-track {
+            animation-duration: 22s;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .live-marquee-track {
+            animation: none;
+          }
+        }
+      `}</style>
+    </section>
   );
 }
