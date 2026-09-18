@@ -3,7 +3,7 @@ import LiveBar from "./components/LiveBar";
 import HomeClient from "./components/HomeClient/index";
 
 export const metadata = {
-  title: "sikkimff FF Result Today Live",
+  title: "Sikkim FF ✓ Sikkim Fatafat ✓ Result Today Live",
   description:
     "Live sikkimff FF Results Today. Check fastest updates, tips, lucky numbers and old results.",
 };

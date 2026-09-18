@@ -393,7 +393,7 @@ export default function Home() {
                     isOff ? "text-rose-500" : "text-sky-950"
                   }`}
                 >
-                  {res}
+                  <p>{res}</p>
                 </div>
               );
             })}
@@ -730,8 +730,8 @@ export default function Home() {
               </h4>
               <p className="leading-relaxed text-slate-500 text-[11px]">
                 Historically played offline, modern developments allow players
-                to follow calculations and track sikkim results via
-                mobile devices and online interfaces. Our record table provides
+                to follow calculations and track sikkim results via mobile
+                devices and online interfaces. Our record table provides
                 comprehensive multi-day historical charts for verification.
               </p>
             </div>

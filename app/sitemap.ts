@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-const baseUrl = "https://sikkimffff.tech";
+const baseUrl = "https://sikkimff.in";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date();
@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "tips",
     "luckynumber",
     "old-kolkata-ff-fatafat-result",
-    "kolkata-ff-patti-list-chart-complete-full",
+    "sikkim-ff-patti-list-chart-complete-full",
   ];
 
   const urls: MetadataRoute.Sitemap = staticPages.map((page) => ({
