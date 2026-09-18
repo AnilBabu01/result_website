@@ -90,9 +90,7 @@ function getLocalDateString(): string {
   return `${year}-${month}-${day}`;
 }
 
-function normalizeResultDate(
-  createdAt: string | null | undefined
-): string {
+function normalizeResultDate(createdAt: string | null | undefined): string {
   if (!createdAt) return "";
   const value = String(createdAt).trim();
   if (!value) return "";
@@ -250,13 +248,13 @@ export default function Home() {
   const hasTodayResult = useMemo(() => todayResults.length > 0, [todayResults]);
 
   const todayTableData: TodayTableItem[] = useMemo(() => {
-    if (!hasTodayResult) {
-      return Array.from({ length: TOTAL_BAZI }, (_, index) => ({
-        no: index + 1,
-        value: "OFF",
-        result: "OFF",
-      }));
-    }
+    // if (!hasTodayResult) {
+    //   return Array.from({ length: TOTAL_BAZI }, (_, index) => ({
+    //     no: index + 1,
+    //     value: "OFF",
+    //     result: "OFF",
+    //   }));
+    // }
 
     return todayResults.slice(0, TOTAL_BAZI).map((item, index) => ({
       no: index + 1,
@@ -286,7 +284,7 @@ export default function Home() {
       .sort(
         (a, b) =>
           new Date(`${b}T00:00:00`).getTime() -
-          new Date(`${a}T00:00:00`).getTime()
+          new Date(`${a}T00:00:00`).getTime(),
       )
       .map((dateStr) => {
         const dayData = historyGrouped[dateStr]
@@ -334,16 +332,15 @@ export default function Home() {
             Connection Lost
           </h2>
           <p className="text-slate-500 text-xs mb-6">
-            Unable to fetch data from the server. Please check your internet connection.
+            Unable to fetch data from the server. Please check your internet
+            connection.
           </p>
           <button
             onClick={handleRefresh}
             disabled={manualRefreshing}
             className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 hover:bg-sky-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-sky-500/30 active:scale-95 transition disabled:opacity-60"
           >
-            <FaSyncAlt
-              className={manualRefreshing ? "animate-spin" : ""}
-            />
+            <FaSyncAlt className={manualRefreshing ? "animate-spin" : ""} />
             {manualRefreshing ? "Retrying..." : "Retry Connection"}
           </button>
         </div>
@@ -374,11 +371,11 @@ export default function Home() {
               return (
                 <div
                   key={`val-${i}`}
-                  className={`py-2 px-0.5 text-center text-[10px] sm:text-xs font-semibold border-r last:border-r-0 border-sky-100/60 ${
-                    isOff ? "text-rose-500 font-bold" : "text-slate-600"
+                  className={`py-2 px-0.5 text-center text-[25px] sm:text-xs font-semibold border-r last:border-r-0 border-sky-100/60 ${
+                    isOff ? "text-rose-500 font-bold" : "text-black"
                   }`}
                 >
-                  {val}
+                  <p className="text-black text-[15px]">{val}</p>
                 </div>
               );
             })}
@@ -476,7 +473,7 @@ export default function Home() {
           {/* Grid Render */}
           {renderGridBoard(
             todayTableData.map((i) => i.value),
-            todayTableData.map((i) => i.result)
+            todayTableData.map((i) => i.result),
           )}
 
           {/* OFF Notice if no records */}
@@ -506,7 +503,6 @@ export default function Home() {
         {/* =================================================
             SIKKIM FATAFAT TIME TABLE CARD
         ================================================= */}
-      
 
         {/* =================================================
             COMMUNITY & DOWNLOAD CTA LINKS
@@ -549,7 +545,9 @@ export default function Home() {
                   <div className="text-[10px] uppercase font-bold text-emerald-100 tracking-wider">
                     Instant Updates
                   </div>
-                  <div className="text-xs font-black">Join WhatsApp Community</div>
+                  <div className="text-xs font-black">
+                    Join WhatsApp Community
+                  </div>
                 </div>
               </div>
               <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
@@ -571,7 +569,9 @@ export default function Home() {
                   <div className="text-[10px] uppercase font-bold text-sky-100 tracking-wider">
                     Official Feed
                   </div>
-                  <div className="text-xs font-black">Join Telegram Channel</div>
+                  <div className="text-xs font-black">
+                    Join Telegram Channel
+                  </div>
                 </div>
               </div>
               <FaArrowRight className="text-xs opacity-70 group-hover:translate-x-1 transition" />
@@ -620,7 +620,7 @@ export default function Home() {
             </button>
           )}
         </div>
-          <section className="w-full bg-white border border-sky-500 rounded-2xl overflow-hidden shadow-md mb-6">
+        <section className="w-full bg-white border border-sky-500 rounded-2xl overflow-hidden shadow-md mb-6">
           <div className="bg-sky-500 px-4 py-3 text-slate-900 flex items-center justify-center gap-2">
             <FaClock className="text-white text-base" />
             <h3 className="font-black text-base uppercase tracking-wide text-amber-50">
@@ -655,7 +655,9 @@ export default function Home() {
               What is sikkimFF (Fatafat)?
             </h3>
             <p className="text-slate-500 text-xs leading-relaxed">
-              This is the premier portal for fast sikkimFF Fatafat results. Access today’s live results alongside historical old charts online free of cost.
+              This is the premier portal for fast sikkimFF Fatafat results.
+              Access today’s live results alongside historical old charts online
+              free of cost.
             </p>
           </div>
 
@@ -665,7 +667,9 @@ export default function Home() {
               Welcome to sikkimFatafat Result
             </h4>
             <p className="text-[11px] text-sky-700 font-medium">
-              sikkimFatafat Today Result ❤️ sikkimFF Result Sabse Pahle Yahi Par Aata Hai ❤️ sikkim ❤️ sikkim Fatafat Chart Dekho ❤️ Patti Aur Single Ke Sath Chart ❤️
+              sikkimFatafat Today Result ❤️ sikkimFF Result Sabse Pahle Yahi Par
+              Aata Hai ❤️ sikkim ❤️ sikkim Fatafat Chart Dekho ❤️ Patti Aur
+              Single Ke Sath Chart ❤️
             </p>
           </div>
 
@@ -678,7 +682,12 @@ export default function Home() {
                 sikkimFF Result & Satta Game
               </h4>
               <p className="leading-relaxed text-slate-500 text-[11px]">
-                Satta games are played across the country, with significant participation from sikkim government and nearby states. The game operates on guessing numbers where participants put forward an amount to win a prespecified reward. Correct guesses yield major payouts, whereas incorrect entries lose the invested amount. Results on this portal update **8 times a day (8 Bazi)**.
+                Satta games are played across the country, with significant
+                participation from sikkim government and nearby states. The game
+                operates on guessing numbers where participants put forward an
+                amount to win a prespecified reward. Correct guesses yield major
+                payouts, whereas incorrect entries lose the invested amount.
+                Results on this portal update **8 times a day (8 Bazi)**.
               </p>
             </div>
 
@@ -689,7 +698,11 @@ export default function Home() {
                 Free sikkimFF Tips & Fraud Warning
               </h4>
               <p className="leading-relaxed text-amber-800/90 text-[11px]">
-                Many sources on social platforms promise guaranteed numbers for money. Note that no guaranteed trick exists; the game depends on individual calculation and luck. Reviewing **sikkimFF Old Results** can assist in forming numerical estimates. Avoid paying third parties for fake outcome predictions.
+                Many sources on social platforms promise guaranteed numbers for
+                money. Note that no guaranteed trick exists; the game depends on
+                individual calculation and luck. Reviewing **sikkimFF Old
+                Results** can assist in forming numerical estimates. Avoid
+                paying third parties for fake outcome predictions.
               </p>
             </div>
 
@@ -702,7 +715,10 @@ export default function Home() {
               <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-600 font-medium">
                 <li>Open this live portal home page.</li>
                 <li>Locate today’s active Bazi round (1 to 8).</li>
-                <li>Verify your number under the specific Bazi column to check winning status.</li>
+                <li>
+                  Verify your number under the specific Bazi column to check
+                  winning status.
+                </li>
               </ol>
             </div>
 
@@ -713,7 +729,10 @@ export default function Home() {
                 Online Play & Previous Records
               </h4>
               <p className="leading-relaxed text-slate-500 text-[11px]">
-                Historically played offline, modern developments allow players to follow calculations and track **কলকাতা Fatafat** results via mobile devices and online interfaces. Our record table provides comprehensive multi-day historical charts for verification.
+                Historically played offline, modern developments allow players
+                to follow calculations and track sikkim results via
+                mobile devices and online interfaces. Our record table provides
+                comprehensive multi-day historical charts for verification.
               </p>
             </div>
           </div>
@@ -722,7 +741,9 @@ export default function Home() {
           <div className="border-t border-slate-100 pt-3 flex items-start gap-2 text-slate-400 text-[10px]">
             <FaShieldAlt className="text-slate-400 text-xs mt-0.5 shrink-0" />
             <p>
-              Information provided is for tracking, historical records, and analytical purposes. Always play responsibly and check local regulations.
+              Information provided is for tracking, historical records, and
+              analytical purposes. Always play responsibly and check local
+              regulations.
             </p>
           </div>
         </section>

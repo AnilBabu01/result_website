@@ -26,12 +26,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const today = getTodayDate();
   const todayISO = getTodayISO();
 
-  const title = `sikkimff Fatafat FF Result Today | Live sikkimff FF Results & Tips`;
+  const title = `sikkim Fatafat fatafat Result Today | Live sikkim fatafat Results & Tips`;
 
-  const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live sikkimff FF Result Updates for ${today}. Check the sikkimff Fatafat Result (कोलकाता फटाफट रिजल्ट), updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
+  const description = `⭐ DADA ❤️ OFFICIAL WEBSITE ❤️⭐ Get Today’s Latest Bazi Tips & Live sikkim fatafat Result Updates for ${today}. Check the sikkimff Fatafat Result  updated Patti List, expert Tips, and detailed Bazi Chart all in one place.`;
 
   return {
-    metadataBase: new URL("https://sikkimffff.cloud"),
+    metadataBase: new URL("https://sikkimffff.in"),
 
     title: {
       default: title,
@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
     keywords: [
       "sikkimff FF",
-      "sikkimff Fatafat",
+      "sikkimff fatafat",
       "sikkimff FF result today",
       "sikkimff Fatafat result",
       "sikkimff FF old result",
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
 
     alternates: {
-      canonical: "https://sikkimffff.cloud",
+      canonical: "https://sikkimffff.in",
     },
 
     robots: {
@@ -77,7 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       title,
       description,
-      url: "https://sikkimffff.cloud",
+      url: "https://sikkimffff.in",
       siteName: "Kolkata Fatafat",
       locale: "en_IN",
 
