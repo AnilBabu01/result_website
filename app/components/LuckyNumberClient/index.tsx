@@ -94,7 +94,7 @@ export default function LuckyWheel() {
             </div>
 
             <h1 className="bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
-              KOLKATA FF
+              Sikkim FF
             </h1>
 
             <p className="mt-1 text-sm font-medium text-purple-200">
