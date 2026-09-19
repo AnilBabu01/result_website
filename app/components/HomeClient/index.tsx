@@ -230,9 +230,11 @@ export default function Home() {
      APP LINKS
   ======================================================= */
 
-  const apkUrl = appData?.data?.apk_url || "#";
-  const whatsappGroup = appData?.data?.whatsaap_group || "#";
-  const telegramChannel = appData?.data?.telegram_channel || "#";
+  const apkUrl = appData?.data?.sikkim_app1 || "#";
+  const whatsappGroup = appData?.data?.whatsaap_group1 || "#";
+  const telegramChannel = appData?.data?.telegram_group1 || "#";
+
+  console.log("appData",appData)
 
   /* =======================================================
      TODAY RESULTS (RESTRICTED TO 8 BAZI)
@@ -371,11 +373,11 @@ export default function Home() {
               return (
                 <div
                   key={`val-${i}`}
-                  className={`py-2 px-0.5 text-center text-[25px] sm:text-xs font-semibold border-r last:border-r-0 border-sky-100/60 ${
+                  className={`py-2 px-0.5 text-center  font-semibold border-r last:border-r-0 border-sky-100/60 ${
                     isOff ? "text-rose-500 font-bold" : "text-black"
                   }`}
                 >
-                  <p className="text-black text-[15px]">{val}</p>
+                  <p className="text-black text-[15px] font-bold">{val}</p>
                 </div>
               );
             })}
@@ -389,11 +391,11 @@ export default function Home() {
               return (
                 <div
                   key={`res-${i}`}
-                  className={`py-2.5 px-0.5 text-center text-xs sm:text-sm font-black border-r last:border-r-0 border-sky-100/60 ${
+                  className={`py-2.5 px-0.5 text-center  font-black border-r last:border-r-0 border-sky-100/60 ${
                     isOff ? "text-rose-500" : "text-sky-950"
                   }`}
                 >
-                  <p>{res}</p>
+                  <p className="text-black text-[15px] font-bold">{res}</p>
                 </div>
               );
             })}
