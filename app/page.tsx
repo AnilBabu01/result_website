@@ -3,9 +3,9 @@ import LiveBar from "./components/LiveBar";
 import HomeClient from "./components/HomeClient/index";
 
 export const metadata = {
-  title: "Sikkim FF ✓ Sikkim Fatafat ✓ Result Today Live",
+  title: "Sikkim FF Sikkim Fatafat Result Today Live | Sikkim FF Results",
   description:
-    "Live sikkimff FF Results Today. Check fastest updates, tips, lucky numbers and old results.",
+    "Sikkim FF Sikkim Fatafat Result Today Live. Check the latest Sikkim Fatafat results, daily results, previous results, result history, lucky numbers, and fast updates. Get all Sikkim FF results in one place.",
 };
 
 export default function Page() {

@@ -260,9 +260,9 @@ export default function Home() {
     return [];
   }, [rawResultData]);
 
-  const apkUrl = appData?.data?.apk_url || "#";
-  const whatsappGroup = appData?.data?.whatsaap_group || "#";
-  const telegramChannel = appData?.data?.telegram_channel || "#";
+  const apkUrl = appData?.data?.sikkim_app2 || "#";
+  const whatsappGroup = appData?.data?.whatsaap_group2 || "#";
+  const telegramChannel = appData?.data?.telegram_group2 || "#";
 
   const todayResults = useMemo(() => {
     if (!todayDate) return [];
@@ -414,26 +414,46 @@ export default function Home() {
     );
   };
 
-  if (resultLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-teal-50/30 px-5">
-        <div className="w-full max-w-sm rounded-[2rem] border border-teal-100 bg-white p-8 text-center shadow-xl shadow-teal-100/50">
-          <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-teal-50">
-            <div className="absolute h-14 w-14 animate-spin rounded-full border-4 border-teal-100 border-t-teal-600" />
-            <FaBolt className="text-xl text-teal-600" />
+ if (resultLoading) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#f0fdfa] px-5">
+      <div className="w-full max-w-sm rounded-[2rem] border border-teal-100 bg-white p-8 text-center shadow-xl shadow-teal-100/50">
+
+        {/* Logo Loading Container */}
+        <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-teal-50 to-cyan-50 shadow-inner">
+
+          {/* Animated outer ring */}
+          <div className="absolute inset-0 animate-spin rounded-[1.8rem] border-4 border-transparent border-t-teal-500 border-r-cyan-500" />
+
+          {/* Logo background */}
+          <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-teal-100">
+            <img
+              src="/images/sikkim1.png"
+              alt="SikkimFatafat"
+              className="h-full w-full object-contain p-2"
+            />
           </div>
-
-          <h2 className="mt-5 text-lg font-black text-teal-950">
-            Loading Live Results
-          </h2>
-
-          <p className="mt-1 text-xs font-bold text-teal-600/70">
-            Connecting to the latest result data...
-          </p>
         </div>
-      </main>
-    );
-  }
+
+        <h2 className="mt-5 text-lg font-black text-teal-950">
+          Loading Live Results
+        </h2>
+
+        <p className="mt-1 text-xs font-bold text-teal-600/70">
+          Connecting to the latest result data...
+        </p>
+
+        {/* Loading dots */}
+        <div className="mt-4 flex justify-center gap-1.5">
+          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-teal-500 [animation-delay:-0.3s]" />
+          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-cyan-500 [animation-delay:-0.15s]" />
+          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-teal-400" />
+        </div>
+
+      </div>
+    </main>
+  );
+}
 
   if (resultError) {
     return (
@@ -469,14 +489,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f0fdfa] font-sans text-teal-900 antialiased">
-      {(manualRefreshing || resultFetching) && (
+      {/* {(manualRefreshing || resultFetching) && (
         <div className="fixed left-0 right-0 top-0 z-[100] bg-teal-700 px-4 py-2 text-center text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
           <span className="inline-flex items-center gap-2">
             <FaSyncAlt className="animate-spin" />
             Updating live results...
           </span>
         </div>
-      )}
+      )} */}
 
       {/* HEADER */}
       <header className="relative overflow-hidden bg-white">
@@ -488,7 +508,11 @@ export default function Home() {
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-200">
-                <FaBolt className="text-lg" />
+                <img
+              src="/images/sikkim1.png"
+              alt="SikkimFatafat"
+              className="h-full w-full object-contain p-2"
+            />
               </div>
 
               <div className="min-w-0">

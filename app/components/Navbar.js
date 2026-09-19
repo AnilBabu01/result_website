@@ -13,7 +13,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     // { name: "Tips", path: "/tips" },
     { name: "Lucky Number", path: "/luckynumber" },
-    // { name: "Patti Chart", path: "/sikkimff-ff-patti-list-chart-complete-full" },
+    { name: "Patti Chart", path: "/sikkimff-ff-patti-list-chart-complete-full" },
   ];
 
   // Track scroll position to update navbar style
